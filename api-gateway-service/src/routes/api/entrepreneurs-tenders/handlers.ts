@@ -1,23 +1,24 @@
 import axios from "axios";
-import { Request, Response, NextFunction } from "express";
+import expressAsyncHandler from "express-async-handler";
 
-export const tendersListHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const result = await axios.get("http://localhost:3002/list");
+export const tendersListHandler = expressAsyncHandler(async (req, res) => {
+  const result = await axios.get(`http://${process.env.TENDER_ADDRESS}/list`);
   res.send(result);
-};
+});
 
-export const createTenderHandler = async (req: Request, res: Response, next: NextFunction) => {
-  await axios.post("http://localhost:3002/create-tender", req.body);
+export const createTenderHandler = expressAsyncHandler(async (req, res) => {
+  await axios.post(`http://${process.env.TENDER_ADDRESS}/create-tender`, req.body);
   res.sendStatus(201);
-};
+});
 
-export const createOfferHandler = async (req: Request, res: Response, next: NextFunction) => {
-  await axios.post("http://localhost:3002/create-offer", req.body);
-  res.sendStatus(201);
-};
-
-export const tenderOffersHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const createOfferHandler = expressAsyncHandler(async (req, res) => {
   const tenderId = req.params.tenderId;
-  const result = await axios.get(`http://localhost:3002/${tenderId}/offers`);
+  await axios.post(`http://${process.env.TENDER_ADDRESS}/${tenderId}/create-offer`, req.body);
+  res.sendStatus(201);
+});
+
+export const tenderOffersHandler = expressAsyncHandler(async (req, res) => {
+  const tenderId = req.params.tenderId;
+  const result = await axios.get(`http://${process.env.TENDER_ADDRESS}/${tenderId}/offers`);
   res.send(result);
-};
+});

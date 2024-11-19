@@ -1,24 +1,17 @@
 import axios from "axios";
-import { asyncHandler } from "../../../utils";
-import { NextFunction, Request, Response } from "express";
+import expressAsyncHandler from "express-async-handler";
 
-export const signupHandler =
-  // asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const response = await axios.post("http://localhost:3001/signup", req.body);
-  };
-// );
+export const signupHandler = expressAsyncHandler(async (req, res) => {
+  const response = await axios.post(`http://${process.env.AUTH_ADDRESS}/signup`, req.body);
+  console.log(response);
+  res.send(response);
+});
 
-export const loginHandler =
-  //  asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    await axios.get("http://localhost:3001/login");
-  };
-// );
+export const loginHandler = expressAsyncHandler(async (req, res) => {
+  const { data } = await axios.get(`http://${process.env.AUTH_ADDRESS}/login`);
+  res.send(data);
+});
 
-export const logoutHandler =
-  //  asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    await axios.get("http://localhost:3001/logout");
-  };
-// );
+export const logoutHandler = expressAsyncHandler(async (req, res) => {
+  await axios.get(`http://${process.env.AUTH_ADDRESS}/logout`);
+});
