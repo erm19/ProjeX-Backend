@@ -7,7 +7,8 @@
   },
   "env": {
     "AWS_COGNITO_REGION": "il-central-1",
-    "AWS_USER_POOL_ID": "il-central-1_3Wwtl1PUA",
-    "AWS_APP_CLIENT_ID": "19okcnos219lua1to5deh62rqb"
+    "AWS_USER_POOL_ID": "il-central-1_ZEHBYy4Mu",
+    "AWS_APP_CLIENT_ID": "4gkhakk54b6auh1oks589ai1ne",
+    "COGNITO_CLIENT_SECRET": "1144allghe1mtj2vs7sbfcof43q55toprnanoff9r3nh2ghqt1e"
   }
 }
