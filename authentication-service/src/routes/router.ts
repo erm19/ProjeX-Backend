@@ -10,4 +10,4 @@ authRouter.get("/", (req, res, next) => {
 
 authRouter.post("/signup", signupHandler);
 
-authRouter.get("/login", loginHandler);
+authRouter.post("/login", loginHandler);

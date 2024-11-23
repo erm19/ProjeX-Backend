@@ -7,6 +7,6 @@ export const asyncHandler =
     const res = args[args.length - 2] as Response<any>;
     return Promise.resolve(fnReturn).catch((err: Error) => {
       console.error("THE ERROR", err.message);
-      return res.sendStatus(500);
+      return res.sendStatus(500).send(err.message);
     });
   };
