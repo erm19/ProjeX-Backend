@@ -31,7 +31,10 @@ export const signupHandler = expressAsyncHandler(async (req, res) => {
     SecretHash: secretHash,
     Username: email,
     Password: password,
-    UserAttributes: userAttributesByRole({ role, companyName, companyRole, licenceNum, officeName, companyId }),
+    UserAttributes: [
+      ...userAttributes({ role, companyName, companyRole, licenceNum, officeName, companyId }),
+      { Name: "email", Value: email },
+    ],
   };
 
   const signupResponse = await cognito.signUp(params);
@@ -67,7 +70,7 @@ export const logoutHandler = expressAsyncHandler(async (req, res) => {
   res.send(true);
 });
 
-function userAttributesByRole(attr: CustomUserAttributes): AttributeType[] {
+function userAttributes(attr: CustomUserAttributes): AttributeType[] {
   return [
     { Name: "custom:role", Value: attr.role || "" },
     { Name: "custom:licenceNum", Value: attr.licenceNum || "" },
