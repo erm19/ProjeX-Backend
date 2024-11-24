@@ -1,4 +1,9 @@
-import { AttributeType, InitiateAuthRequest, SignUpCommandInput } from "@aws-sdk/client-cognito-identity-provider";
+import {
+  AttributeType,
+  InitiateAuthCommandInput,
+  InitiateAuthRequest,
+  SignUpCommandInput,
+} from "@aws-sdk/client-cognito-identity-provider";
 import expressAsyncHandler from "express-async-handler";
 import { cognito } from "../providers/aws";
 import { CustomUserAttributes } from "../types";
@@ -76,6 +81,25 @@ export const logoutHandler = expressAsyncHandler(async (req, res) => {
   await cognito.globalSignOut(input);
 
   res.send(true);
+});
+
+export const refreshHandler = expressAsyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+
+  const params: InitiateAuthCommandInput = {
+    AuthFlow: "REFRESH_TOKEN_AUTH",
+    ClientId: process.env.AWS_APP_CLIENT_ID,
+    AuthParameters: {
+      REFRESH_TOKEN: refreshToken,
+    },
+  };
+
+  const authResponse = await cognito.initiateAuth(params);
+
+  res.json({
+    accessToken: authResponse.AuthenticationResult?.AccessToken,
+    idToken: authResponse.AuthenticationResult?.IdToken,
+  });
 });
 
 function userAttributes(attr: CustomUserAttributes): AttributeType[] {
