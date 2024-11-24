@@ -1,5 +1,4 @@
 import { Router } from "express";
-import expressAsyncHandler from "express-async-handler";
 import { loginHandler, logoutHandler, signupHandler } from "./handlers";
 
 export const authRouter = Router();
