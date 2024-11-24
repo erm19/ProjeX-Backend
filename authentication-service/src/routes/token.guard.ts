@@ -1,12 +1,13 @@
-import { NextFunction, Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import { decode, verify } from "jsonwebtoken";
 import { jwks } from "../providers";
 
-export const validateTokenGuard = async (req: Request, res: any, next: NextFunction) => {
+export const validateTokenGuard = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "No token provided" });
+    res.status(401).json({ message: "No token provided" });
+    return;
   }
 
   const decodedHeader = decode(token, { complete: true });

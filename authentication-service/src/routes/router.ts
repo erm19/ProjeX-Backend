@@ -12,6 +12,6 @@ authRouter.post("/signup", signupHandler);
 
 authRouter.post("/login", loginHandler);
 
-authRouter.post("/logout", logoutHandler);
+authRouter.post("/logout", validateTokenGuard, logoutHandler);
 
 authRouter.post("/refresh", validateTokenGuard, refreshHandler);
