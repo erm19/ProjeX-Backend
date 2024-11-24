@@ -37,10 +37,15 @@ export const loginHandler = expressAsyncHandler(async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  const hasher = createHmac("sha256", process.env.COGNITO_CLIENT_SECRET || "");
+  hasher.update(`${email}${process.env.AWS_APP_CLIENT_ID}`);
+  const secretHash = hasher.digest("base64");
+
   const params: InitiateAuthRequest = {
     AuthFlow: "USER_PASSWORD_AUTH",
     ClientId: process.env.AWS_APP_CLIENT_ID,
-    AuthParameters: { USERNAME: email, PASSWORD: password },
+
+    AuthParameters: { USERNAME: email, PASSWORD: password, SECRET_HASH: secretHash },
   };
 
   const authResponse = await cognito.initiateAuth(params);
