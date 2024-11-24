@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { loginHandler, logoutHandler, signupHandler } from "./handlers";
+import { loginHandler, logoutHandler, refreshHandler, signupHandler } from "./handlers";
+import { validateTokenGuard } from "./token.guard";
 
 export const authRouter = Router();
 
@@ -13,4 +14,4 @@ authRouter.post("/login", loginHandler);
 
 authRouter.post("/logout", logoutHandler);
 
-authRouter.post("/refresh");
+authRouter.post("/refresh", validateTokenGuard, refreshHandler);

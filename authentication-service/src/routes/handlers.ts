@@ -84,13 +84,19 @@ export const logoutHandler = expressAsyncHandler(async (req, res) => {
 });
 
 export const refreshHandler = expressAsyncHandler(async (req, res) => {
-  const { refreshToken } = req.body;
+  const accessToken = req.headers.authorization?.split(" ")[1];
+  const { refreshToken, username } = req.body;
+
+  const hasher = createHmac("sha256", process.env.COGNITO_CLIENT_SECRET || "");
+  hasher.update(`${username}${process.env.AWS_APP_CLIENT_ID}`);
+  const secretHash = hasher.digest("base64");
 
   const params: InitiateAuthCommandInput = {
     AuthFlow: "REFRESH_TOKEN_AUTH",
     ClientId: process.env.AWS_APP_CLIENT_ID,
     AuthParameters: {
       REFRESH_TOKEN: refreshToken,
+      SECRET_HASH: secretHash,
     },
   };
 
