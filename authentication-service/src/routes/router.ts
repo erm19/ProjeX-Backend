@@ -1,6 +1,6 @@
 import { Router } from "express";
 import expressAsyncHandler from "express-async-handler";
-import { loginHandler, signupHandler } from "./handlers";
+import { loginHandler, logoutHandler, signupHandler } from "./handlers";
 
 export const authRouter = Router();
 
@@ -11,3 +11,5 @@ authRouter.get("/", (req, res, next) => {
 authRouter.post("/signup", signupHandler);
 
 authRouter.post("/login", loginHandler);
+
+authRouter.post("/logout", logoutHandler);

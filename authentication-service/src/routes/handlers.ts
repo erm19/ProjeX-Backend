@@ -1,9 +1,4 @@
-import {
-  AttributeType,
-  AuthenticationResultType,
-  InitiateAuthRequest,
-  SignUpCommandInput,
-} from "@aws-sdk/client-cognito-identity-provider";
+import { AttributeType, InitiateAuthRequest, SignUpCommandInput } from "@aws-sdk/client-cognito-identity-provider";
 import expressAsyncHandler from "express-async-handler";
 import { cognito } from "../providers/aws";
 import { CustomUserAttributes } from "../types";
@@ -72,6 +67,14 @@ export const loginHandler = expressAsyncHandler(async (req, res) => {
 });
 
 export const logoutHandler = expressAsyncHandler(async (req, res) => {
+  const accessToken = req.headers.authorization?.split(" ")[1];
+  const input = {
+    // GlobalSignOutRequest
+    AccessToken: accessToken || "", // required
+  };
+
+  await cognito.globalSignOut(input);
+
   res.send(true);
 });
 
