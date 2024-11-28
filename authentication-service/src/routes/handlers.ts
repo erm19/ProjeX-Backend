@@ -11,6 +11,7 @@ import { createHmac } from "crypto";
 import { decode, verify } from "jsonwebtoken";
 
 export const signupHandler = expressAsyncHandler(async (req, res) => {
+  console.log("I'm here!");
   const CLIENT_SECRET = process.env.COGNITO_CLIENT_SECRET || "";
   const CLIENT_ID = process.env.AWS_APP_CLIENT_ID || "";
 
