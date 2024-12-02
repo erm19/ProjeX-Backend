@@ -25,7 +25,7 @@ export const getTenderHandler = expressAsyncHandler(async (req, res) => {
 });
 
 export const createTenderHandler = expressAsyncHandler(async (req, res) => {
-  const { status } = await axios.post(`http://${process.env.ENT_TENDER_ADDRESS}/create-tender`, req.body, {
+  const { status } = await axios.post(`http://${process.env.ENT_TENDER_ADDRESS}/tender`, req.body, {
     headers: { "Content-Type": req.headers["content-type"], "x-username": req.headers["x-username"] },
   });
 
