@@ -1,9 +1,15 @@
 import { Router } from "express";
 import { authRouter } from "./auth";
-import { entrTendersRouter } from "./entrepreneurs-tenders";
+import { entTendersRouter } from "./ent-tenders";
+import { entOffersRouter } from "./ent-offers";
+import { paymentRouter } from "./payment/router";
 
 export const apiRouter = Router();
 
 apiRouter.use("/auth", authRouter);
 
-apiRouter.use("/entre-tenders", entrTendersRouter);
+apiRouter.use("/payment", paymentRouter);
+
+apiRouter.use("/ent-tenders", entTendersRouter);
+
+apiRouter.use("/ent-offers", entOffersRouter);
