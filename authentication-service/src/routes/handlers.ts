@@ -9,6 +9,7 @@ import { cognito, jwks } from "../providers/aws";
 import { CustomUserAttributes } from "../types";
 import { createHmac } from "crypto";
 import { decode, verify } from "jsonwebtoken";
+import { User } from "../models";
 
 export const signupHandler = expressAsyncHandler(async (req, res) => {
   console.log("I'm here!");
@@ -41,7 +42,16 @@ export const signupHandler = expressAsyncHandler(async (req, res) => {
 
   const signupResponse = await cognito.signUp(params);
 
-  console.log(signupResponse);
+  // TODO: Move to AWS Lamda Function later to Cognito post signup confirmation
+  const user = new User({
+    email: email,
+    role: role,
+    companyName: companyName || officeName,
+    licenseNum: licenceNum,
+    companyNum: companyId,
+  });
+  user.save();
+  // End TODO
 
   res.send(signupResponse);
 });
@@ -146,7 +156,7 @@ function userAttributes(attr: CustomUserAttributes): AttributeType[] {
     { Name: "custom:role", Value: attr.role || "" },
     { Name: "custom:licenceNum", Value: attr.licenceNum || "" },
     { Name: "custom:companyCode", Value: attr.companyId || "" },
-    { Name: "custom:companyName", Value: attr.companyName || "" },
+    { Name: "custom:companyName", Value: attr.companyName || attr.officeName || "" },
     { Name: "custom:companyRole", Value: attr.companyRole || "" },
   ];
 }
