@@ -6,6 +6,8 @@
     "ts": "node --inspect=0.0.0.0:9229 --nolazy -r ts-node/register"
   },
   "env": {
-    "AUTH_ADDRESS": "localhost:3001"
+    "AUTH_ADDRESS": "localhost:3001",
+    "ENT_TENDER_ADDRESS": "localhost:3002",
+    "ENT_OFFERS_ADDRESS": "localhost:3003"
   }
 }

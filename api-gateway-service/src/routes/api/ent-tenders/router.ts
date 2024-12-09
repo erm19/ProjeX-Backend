@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { createTenderHandler, getTenderHandler, myTendersHandler, tenderListHandler } from "./handlers";
-import { authGuard } from "guards/auth.guard";
+import { authGuard } from "../../../guards";
 
 export const entTendersRouter = Router();
 
-entTendersRouter.get("/", tenderListHandler);
+entTendersRouter.get("/list", tenderListHandler);
 
 entTendersRouter.post("/tender", authGuard, createTenderHandler);
 

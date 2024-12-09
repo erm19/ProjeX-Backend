@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authGuard } from "guards/auth.guard";
+import { authGuard } from "../../../guards";
 import { createOfferHandler, myOffersHandler, tenderOffersHandler } from "./handlers";
 
 export const entOffersRouter = Router();

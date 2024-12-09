@@ -2,7 +2,7 @@ import axios, { HttpStatusCode } from "axios";
 import expressAsyncHandler from "express-async-handler";
 
 export const tenderListHandler = expressAsyncHandler(async (req, res) => {
-  const { status, data } = await axios.get(`http://${process.env.ENT_TENDER_ADDRESS}/list`);
+  const { status, data } = await axios.get(`http://${process.env.ENT_TENDER_ADDRESS}/list`, { params: req.query });
   if (status !== HttpStatusCode.Ok) {
     res.sendStatus(status);
     return;

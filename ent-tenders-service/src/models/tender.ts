@@ -8,7 +8,6 @@ interface IParcel {
 }
 
 interface IQuestionnaire {
-  id: string;
   question: string;
   type: QuestionType;
 }
@@ -20,6 +19,7 @@ interface ITender extends Document {
   endDate: Date;
   questionnaire: IQuestionnaire[];
   parcels: IParcel[];
+  city: string;
   hasInspector: boolean;
   private: boolean;
   files: string[];
@@ -31,7 +31,6 @@ const ParcelSchema = new Schema<IParcel>({
 });
 
 const QuestionnaireSchema = new Schema<IQuestionnaire>({
-  id: { type: String, default: () => new Types.ObjectId().toHexString() },
   question: { type: String, required: true },
   type: { type: String, enum: Object.values(QuestionType), required: true },
 });
@@ -43,14 +42,16 @@ const TenderSchema = new Schema<ITender>({
   endDate: { type: Date, required: true },
   hasInspector: { type: Boolean, required: true },
   private: { type: Boolean, required: true },
+  city: { type: String, required: true },
   parcels: [ParcelSchema],
   questionnaire: [QuestionnaireSchema],
+  files: [{ type: String }],
 });
-
-export const Tender = model<ITender>("Tender", TenderSchema);
 
 TenderSchema.post("save", async (tender) => {
   const user = await User.findOne({ _id: tender.creator }, { tenders: true });
   user?.tenders.push(tender._id as Types.ObjectId);
   await user?.save();
 });
+
+export const Tender = model<ITender>("Tender", TenderSchema);

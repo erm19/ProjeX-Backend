@@ -9,8 +9,8 @@ entTendersRouter.get("/", (req, res, next) => {
 
 entTendersRouter.get("/list", tendersListHandler);
 
-entTendersRouter.get("tender/:tenderId", getTenderHandler);
+entTendersRouter.get("/tender/:tenderId", getTenderHandler);
 
-entTendersRouter.post("tender", createTenderHandler);
+entTendersRouter.post("/tender", createTenderHandler);
 
 entTendersRouter.get("/my-tenders", getMyTendersHandler);
