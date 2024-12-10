@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "cd ./api-gateway-service && npm i && cd ./authentication-service && npm i && cd ./ent-offers-service && npm i && cd ./ent-tenders-service && npm i"
   },
   "repository": {
     "type": "git",
