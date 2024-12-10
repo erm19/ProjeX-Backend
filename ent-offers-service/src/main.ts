@@ -13,7 +13,7 @@ async function startService() {
   app.use("/", entOffersRouter);
 
   app.listen(3003, () => {
-    console.log("Server running on port 3002");
+    console.log("Server running on port 3003");
   });
 }
 
