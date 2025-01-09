@@ -1,5 +1,4 @@
-import axios, { HttpStatusCode } from "axios";
-import { createHttpClient } from "../utils";
+import { createHttpClient } from "../core/utils";
 import { NextFunction, Request, Response } from "express";
 import { HttpMethod } from "../types";
 
@@ -14,7 +13,7 @@ export const authGuard = async (req: Request, res: Response, next: NextFunction)
   }
 
   try {
-    const data = await authHttpClient("verify", HttpMethod.POST, req.body, { Authorization: token });
+    const data = await authHttpClient("verify", HttpMethod.POST, { data: req.body, headers: { Authorization: token } });
     req.headers["x-username"] = data.username;
     next();
   } catch (error: any) {

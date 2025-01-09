@@ -1,14 +1,14 @@
-import axios, { AxiosHeaders } from "axios";
+import axios, { AxiosHeaders, AxiosRequestConfig } from "axios";
 
 export const createHttpClient =
   (baseUrl: string) =>
-  async (endpoint: string, method = "GET", data: any, headers: any) => {
+  async (endpoint: string, method = "GET", config: AxiosRequestConfig) => {
     try {
       const res = await axios({
         method,
         url: `${baseUrl}/${endpoint}`,
-        data,
-        headers,
+        data: config.data,
+        headers: config.headers,
       });
       return res.data;
     } catch (err: any) {
