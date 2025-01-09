@@ -5,6 +5,6 @@ export const entOffersRouter = Router();
 
 entOffersRouter.get("/my-offers", myOffersHandler);
 
-entOffersRouter.get("/:tenderId", getOffersHandler);
+entOffersRouter.get("/:tenderId/offers", getOffersHandler);
 
 entOffersRouter.post("/:tenderId/offer", createOfferHandler);
