@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authRouter } from "./routers";
+import { authRouter, entOffersRouter } from "./routers";
 
 export const apiRouter = Router();
 
@@ -9,4 +9,4 @@ apiRouter.use("/auth", authRouter);
 
 // apiRouter.use("/ent-tenders", entTendersRouter);
 
-// apiRouter.use("/ent-offers", entOffersRouter);
+apiRouter.use("/ent-offers", entOffersRouter);

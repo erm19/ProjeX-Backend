@@ -1,53 +1,29 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import expressAsyncHandler from "express-async-handler";
 import { createHttpClient } from "../../core/utils";
 import { HttpMethod } from "../../types";
+import { Request, Response } from "express";
 
 const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
 
-export const signupController = expressAsyncHandler(async (req, res) => {
+const baseAuthController = (endpoint: string, method: string) => async (req: Request, res: Response) => {
   try {
-    const data = await authHttpClient("signup", HttpMethod.POST, { data: req.body });
-    res.send(data);
-  } catch (error: any) {
-    // TODO: Deal with it later
-  }
-});
-
-export const loginController = expressAsyncHandler(async (req, res) => {
-  try {
-    const data = await authHttpClient("login", HttpMethod.POST, { data: req.body });
-    res.send(data);
-  } catch (error: any) {
-    // TODO:
-  }
-});
-
-export const logoutController = expressAsyncHandler(async (req, res) => {
-  try {
-    const data = await authHttpClient("logout", HttpMethod.GET, {
-      headers: { Authorization: req.headers.authorization },
-    });
-    res.send(data);
-  } catch (error: any) {}
-});
-
-export const refreshController = expressAsyncHandler(async (req, res) => {
-  try {
-    const data = await authHttpClient("refresh", HttpMethod.POST, {
+    const data = await authHttpClient(endpoint, method, {
       data: req.body,
       headers: { Authorization: req.headers.authorization },
     });
-    res.send(data);
-  } catch (error: any) {}
-});
+    res.json(data);
+  } catch (error: any) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
 
-export const verifyController = expressAsyncHandler(async (req, res) => {
-  try {
-    const data = await authHttpClient("verify", HttpMethod.POST, {
-      data: req.body,
-      headers: { Authorization: req.headers.authorization },
-    });
-    res.send(data);
-  } catch (error: any) {}
-});
+export const signupController = baseAuthController("signup", HttpMethod.POST);
+
+export const loginController = baseAuthController("login", HttpMethod.POST);
+
+export const logoutController = baseAuthController("logout", HttpMethod.GET);
+
+export const refreshController = baseAuthController("refresh", HttpMethod.POST);
+
+export const verifyController = baseAuthController("verify", HttpMethod.POST);
