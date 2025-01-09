@@ -1,12 +1,10 @@
-import axios, { HttpStatusCode } from "axios";
-import expressAsyncHandler from "express-async-handler";
 import { createHttpClient } from "../../core/utils";
 import { Request, Response } from "express";
 import { HttpMethod } from "../../types";
 
 const entOffersHttpClient = createHttpClient(`http://${process.env.ENT_OFFERS_ADDRESS}`);
 
-const baseEntOffersController =
+const baseController =
   (getEndpoint: (req: Request) => string, method: string) => async (req: Request, res: Response) => {
     try {
       const endpoint = getEndpoint(req);
@@ -20,14 +18,8 @@ const baseEntOffersController =
     }
   };
 
-export const myOffersController = baseEntOffersController(() => "my-offers", HttpMethod.GET);
+export const myOffersController = baseController(() => "my-offers", HttpMethod.GET);
 
-export const tenderOffersController = baseEntOffersController(
-  (req: Request) => `${req.params.tenderId}/offers`,
-  HttpMethod.GET
-);
+export const tenderOffersController = baseController((req: Request) => `${req.params.tenderId}/offers`, HttpMethod.GET);
 
-export const createOfferController = baseEntOffersController(
-  (req: Request) => `${req.params.tenderId}/offer`,
-  HttpMethod.POST
-);
+export const createOfferController = baseController((req: Request) => `${req.params.tenderId}/offer`, HttpMethod.POST);

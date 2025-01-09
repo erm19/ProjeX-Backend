@@ -1,6 +1,6 @@
-import { createHttpClient } from "../core/utils";
+import { createHttpClient } from "../../core/utils";
 import { NextFunction, Request, Response } from "express";
-import { HttpMethod } from "../types";
+import { HttpMethod } from "../../types";
 
 const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
 

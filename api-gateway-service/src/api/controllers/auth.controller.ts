@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 
 const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
 
-const baseAuthController = (endpoint: string, method: string) => async (req: Request, res: Response) => {
+const baseController = (endpoint: string, method: string) => async (req: Request, res: Response) => {
   try {
     const data = await authHttpClient(endpoint, method, {
       data: req.body,
@@ -18,12 +18,12 @@ const baseAuthController = (endpoint: string, method: string) => async (req: Req
   }
 };
 
-export const signupController = baseAuthController("signup", HttpMethod.POST);
+export const signupController = baseController("signup", HttpMethod.POST);
 
-export const loginController = baseAuthController("login", HttpMethod.POST);
+export const loginController = baseController("login", HttpMethod.POST);
 
-export const logoutController = baseAuthController("logout", HttpMethod.GET);
+export const logoutController = baseController("logout", HttpMethod.GET);
 
-export const refreshController = baseAuthController("refresh", HttpMethod.POST);
+export const refreshController = baseController("refresh", HttpMethod.POST);
 
-export const verifyController = baseAuthController("verify", HttpMethod.POST);
+export const verifyController = baseController("verify", HttpMethod.POST);

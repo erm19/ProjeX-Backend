@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { authRouter, entOffersRouter } from "./routers";
+import { apiRouter } from "./api.router";
 
-export const apiRouter = Router();
+export const appRouter = Router();
 
-apiRouter.use("/auth", authRouter);
+appRouter.get("/", (req, res, next) => {
+  res.json("┻━┻︵ヽ(`Д´)ﾉ︵ ┻━┻");
+});
 
-// apiRouter.use("/payment", paymentRouter);
-
-// apiRouter.use("/ent-tenders", entTendersRouter);
-
-apiRouter.use("/ent-offers", entOffersRouter);
+appRouter.use("/api", apiRouter);

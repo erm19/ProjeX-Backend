@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authGuard } from "../../../guards";
 import { myOffersController, tenderOffersController, createOfferController } from "../../controllers";
+import { authGuard } from "../../middlewares";
 
 export const entOffersRouter = Router();
 
