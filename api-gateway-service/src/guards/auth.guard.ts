@@ -1,16 +1,24 @@
 import axios, { HttpStatusCode } from "axios";
-import expressAsyncHandler from "express-async-handler";
+import { createHttpClient } from "../utils";
+import { NextFunction, Request, Response } from "express";
+import { HttpMethod } from "../types";
 
-export const authGuard = expressAsyncHandler(async (req, res, next) => {
-  const { status, data } = await axios.post(`http://${process.env.AUTH_ADDRESS}/verify`, req.body, {
-    headers: { Authorization: req.headers.authorization },
-  });
-  if (status !== HttpStatusCode.Ok) {
-    res.sendStatus(401);
+const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
+
+export const authGuard = async (req: Request, res: Response, next: NextFunction) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    res.status(401).json({ error: "Missing authorization toke" });
     return;
   }
 
-  req.headers["x-username"] = data.username;
-
-  next();
-});
+  try {
+    const data = await authHttpClient("verify", HttpMethod.POST, req.body, { Authorization: token });
+    req.headers["x-username"] = data.username;
+    next();
+  } catch (error: any) {
+    const status = error.status || 503;
+    res.status(status).json({ error: error.message || "Service unavailable" });
+  }
+};
