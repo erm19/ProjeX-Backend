@@ -31,14 +31,23 @@ const ParcelSchema = new Schema<IParcel>({
 });
 
 const QuestionnaireSchema = new Schema<IQuestionnaire>({
-  question: { type: String, required: true },
+  question: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value.trim() !== ""; // Ensure non-empty strings
+      },
+      message: "Question cannot be empty.",
+    },
+  },
   type: { type: String, enum: Object.values(QuestionType), required: true },
 });
 
 const TenderSchema = new Schema<ITender>({
   title: { type: String, required: true },
   creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  type: { type: String, required: true },
+  type: { type: String, required: true, enum: ["renewal", "tama"] },
   endDate: { type: Date, required: true },
   hasInspector: { type: Boolean, required: true },
   private: { type: Boolean, required: true },
