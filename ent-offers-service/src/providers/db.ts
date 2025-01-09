@@ -19,6 +19,7 @@ export const connectDB = async (): Promise<Connection> => {
     return db.connection;
   } catch (error) {
     console.error("Database connection failed", error);
-    process.exit(1); // Exit process with failure
+    setTimeout(connectDB, 5000);
+    throw error;
   }
 };
