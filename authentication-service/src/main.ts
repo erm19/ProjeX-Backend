@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { authRouter } from "./routes";
-import { connectDB } from "./providers";
+import { authRouter } from "./api/routes";
+import { connectDB } from "./infrastructure/database";
 
 async function startService() {
   await connectDB();

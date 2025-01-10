@@ -5,7 +5,7 @@ import {
   SignUpCommandInput,
 } from "@aws-sdk/client-cognito-identity-provider";
 import expressAsyncHandler from "express-async-handler";
-import { cognito, jwks } from "../providers/aws";
+import { cognito, jwks } from "../infrastructure/providers/aws";
 import { CustomUserAttributes } from "../types";
 import { createHmac } from "crypto";
 import { decode, verify } from "jsonwebtoken";

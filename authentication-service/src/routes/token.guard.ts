@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { decode, verify } from "jsonwebtoken";
-import { jwks } from "../providers";
+import { jwks } from "../infrastructure/providers";
 
 export const validateTokenGuard = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
