@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { validateTokenGuard } from "../../routes/token.guard";
 import { AuthController } from "../controllers";
+import { validateTokenGuard } from "../middlewares";
 
 export const authRouter = Router();
 

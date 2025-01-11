@@ -2,7 +2,6 @@ import {
   AttributeType,
   CognitoIdentityProvider,
   InitiateAuthCommandInput,
-  InitiateAuthRequest,
   SignUpCommandInput,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { JwksClient } from "jwks-rsa";
@@ -24,7 +23,7 @@ export class AwsCognitoProvider {
       Username: params.email,
       Password: params.password,
       UserAttributes: [
-        ...AwsCognitoProvider.userAttributes({
+        ...this.userAttributes({
           role: params.role,
           companyName: params.companyName,
           companyRole: params.companyRole,
@@ -39,14 +38,9 @@ export class AwsCognitoProvider {
   }
 
   static async login(params: LoginParams) {
-    const commandParams: InitiateAuthCommandInput = {
-      AuthFlow: "USER_PASSWORD_AUTH",
-      ClientId: process.env.AWS_APP_CLIENT_ID,
+    const commandParams = this.formatInitiateAuthParams(params);
 
-      AuthParameters: { USERNAME: params.username, PASSWORD: params.password, SECRET_HASH: params.secretHash },
-    };
-
-    return await this._cognito.initiateAuth(commandParams);
+    return await this.initiateAuth(commandParams);
   }
 
   static async logout(token: string) {
@@ -59,16 +53,36 @@ export class AwsCognitoProvider {
   }
 
   static async refresh(params: RefreshParams) {
-    const commandParams: InitiateAuthCommandInput = {
-      AuthFlow: "REFRESH_TOKEN_AUTH",
-      ClientId: params.clientId,
-      AuthParameters: {
-        REFRESH_TOKEN: params.refreshToken,
-        SECRET_HASH: params.secretHash,
-      },
-    };
+    const commandParams = this.formatInitiateAuthParams(params);
 
-    return await this._cognito.initiateAuth(commandParams);
+    return await this.initiateAuth(commandParams);
+  }
+
+  private static async initiateAuth(params: InitiateAuthCommandInput) {
+    const response = await this._cognito.initiateAuth(params);
+
+    if (!response.AuthenticationResult) throw { status: 401, message: "Unauthorized" };
+
+    return response.AuthenticationResult;
+  }
+
+  private static formatInitiateAuthParams(params: LoginParams | RefreshParams): InitiateAuthCommandInput {
+    if ("refreshToken" in params) {
+      return {
+        AuthFlow: "REFRESH_TOKEN_AUTH",
+        ClientId: params.clientId,
+        AuthParameters: {
+          REFRESH_TOKEN: params.refreshToken,
+          SECRET_HASH: params.secretHash,
+        },
+      };
+    }
+    return {
+      AuthFlow: "USER_PASSWORD_AUTH",
+      ClientId: process.env.AWS_APP_CLIENT_ID,
+
+      AuthParameters: { USERNAME: params.username, PASSWORD: params.password, SECRET_HASH: params.secretHash },
+    };
   }
 
   private static userAttributes(attr: CustomUserAttributes): AttributeType[] {
