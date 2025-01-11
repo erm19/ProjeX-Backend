@@ -21,7 +21,11 @@ const baseController =
     }
   };
 
-export const tenderListController = baseController(() => "list", HttpMethod.GET);
+export const tenderListController = baseController((req: Request) => {
+  const query = req.url.split("?")[1];
+  if (!query) return "list";
+  return `list?${req.url.split("?")[1]}`;
+}, HttpMethod.GET);
 
 export const getTenderController = baseController((req: Request) => `tender/${req.params.tenderId}`, HttpMethod.GET);
 
