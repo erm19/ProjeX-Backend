@@ -21,7 +21,9 @@ export class MongoTenderRepository implements ITenderRepository {
   async findById(id: string): Promise<ITender | null> {
     return await Tender.findById(id);
   }
-  async list(filter: RootFilterQuery<ITender>): Promise<ITender[]> {
-    return await Tender.find(filter, { title: true, type: true, parcels: true, endDate: true, city: true });
+  async list(filter: RootFilterQuery<ITender>, limit: number): Promise<ITender[]> {
+    return await Tender.find(filter, { title: true, type: true, parcels: true, endDate: true, city: true })
+      .sort({ _id: 1 })
+      .limit(limit + 1);
   }
 }

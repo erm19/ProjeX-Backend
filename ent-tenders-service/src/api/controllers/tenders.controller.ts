@@ -1,15 +1,28 @@
 import { Request, Response } from "express";
-import { CreateTenderUseCase, GetTenderUseCase } from "../../application/use-cases";
-import { CreateTenderService } from "../../domain/services";
+import { CreateTenderUseCase, GetTenderUseCase, ListTendersUseCase } from "../../application/use-cases";
+import { CreateTenderService, ListTendersService } from "../../domain/services";
 import { tenderRepo, userRepo } from "../../main";
 import { isValidObjectId } from "mongoose";
 
 const createTenderService = new CreateTenderService(userRepo, tenderRepo);
 const createTenderUseCase = new CreateTenderUseCase(createTenderService);
 const getTenderUseCase = new GetTenderUseCase(tenderRepo);
+const listTendersService = new ListTendersService(tenderRepo);
+const listTendersUseCase = new ListTendersUseCase(listTendersService);
 
 export class TendersController {
-  static async list(req: Request, res: Response) {}
+  static async list(req: Request, res: Response) {
+    const citiesFilter = (
+      Array.isArray(req.query.cities) ? req.query.cities : req.query.cities ? [req.query.cities] : []
+    ) as string[];
+    const limit = parseInt(req.query.limit as string, 10) || 20;
+    const lastId = req.query.lastId as string;
+
+    try {
+      const tenders = await listTendersUseCase.execute(citiesFilter, limit, lastId);
+      res.json({ tenders });
+    } catch (error: any) {}
+  }
 
   static async details(req: Request, res: Response) {
     const tenderId = req.params.tenderId || "";

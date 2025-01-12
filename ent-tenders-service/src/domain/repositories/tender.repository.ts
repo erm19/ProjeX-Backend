@@ -5,5 +5,5 @@ import { CreateTender } from "../../core/types";
 export interface ITenderRepository {
   create(tender: CreateTender): Promise<ITender>;
   findById(id: string): Promise<ITender | null>;
-  list(filter: RootFilterQuery<ITender>): Promise<ITender[]>;
+  list(filter: RootFilterQuery<ITender>, limit: number): Promise<ITender[]>;
 }
