@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   tenderListController,
   createTenderController,
-  getTenderController,
+  tenderDetailsController,
   myTendersController,
 } from "../../controllers";
 import { authGuard } from "../../middlewares";
@@ -13,6 +13,6 @@ entTendersRouter.get("/list", tenderListController);
 
 entTendersRouter.post("/tender", authGuard, createTenderController);
 
-entTendersRouter.get("/tender/:tenderId", authGuard, getTenderController);
+entTendersRouter.get("/tender/:tenderId", authGuard, tenderDetailsController);
 
 entTendersRouter.get("/my-tenders", authGuard, myTendersController);

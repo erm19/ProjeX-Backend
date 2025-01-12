@@ -27,7 +27,10 @@ export const tenderListController = baseController((req: Request) => {
   return `list?${req.url.split("?")[1]}`;
 }, HttpMethod.GET);
 
-export const getTenderController = baseController((req: Request) => `details/${req.params.tenderId}`, HttpMethod.GET);
+export const tenderDetailsController = baseController(
+  (req: Request) => `details/${req.params.tenderId}`,
+  HttpMethod.GET
+);
 
 export const createTenderController = baseController(() => "tender", HttpMethod.POST);
 
