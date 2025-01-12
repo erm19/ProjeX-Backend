@@ -1,7 +1,8 @@
+import { RootFilterQuery } from "mongoose";
 import { ITender } from "../entities";
 
 export interface ITenderRepository {
-  create(): Promise<ITender>;
+  create(tender: ITender): Promise<ITender>;
   findById(id: string): Promise<ITender | null>;
-  list(): Promise<ITender[]>;
+  list(filter: RootFilterQuery<ITender>): Promise<ITender[]>;
 }
