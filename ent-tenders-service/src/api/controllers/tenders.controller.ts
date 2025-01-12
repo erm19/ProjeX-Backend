@@ -1,15 +1,28 @@
 import { Request, Response } from "express";
-import { CreateTenderUseCase } from "../../application/use-cases";
+import { CreateTenderUseCase, GetTenderUseCase } from "../../application/use-cases";
 import { CreateTenderService } from "../../domain/services";
 import { tenderRepo, userRepo } from "../../main";
+import { isValidObjectId } from "mongoose";
 
 const createTenderService = new CreateTenderService(userRepo, tenderRepo);
 const createTenderUseCase = new CreateTenderUseCase(createTenderService);
+const getTenderUseCase = new GetTenderUseCase(tenderRepo);
 
 export class TendersController {
   static async list(req: Request, res: Response) {}
 
-  static async tender(req: Request, res: Response) {}
+  static async tender(req: Request, res: Response) {
+    const tenderId = req.params.tenderId || "";
+    if (isValidObjectId(tenderId)) {
+      res.status(400).json({ message: "Invalid ObjectId format" });
+      return;
+    }
+
+    try {
+      const tender = getTenderUseCase.execute(tenderId);
+      res.json({ tender: tender });
+    } catch (error: any) {}
+  }
 
   static async create(req: Request, res: Response) {
     try {
