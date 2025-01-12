@@ -9,7 +9,7 @@ entTendersRouter.get("/", (req, res, next) => {
 
 entTendersRouter.get("/list", TendersController.list);
 
-entTendersRouter.get("/tender/:tenderId", TendersController.tender);
+entTendersRouter.get("/details/:tenderId", TendersController.details);
 
 entTendersRouter.post("/tender", TendersController.create);
 

@@ -11,7 +11,7 @@ const getTenderUseCase = new GetTenderUseCase(tenderRepo);
 export class TendersController {
   static async list(req: Request, res: Response) {}
 
-  static async tender(req: Request, res: Response) {
+  static async details(req: Request, res: Response) {
     const tenderId = req.params.tenderId || "";
     if (isValidObjectId(tenderId)) {
       res.status(400).json({ message: "Invalid ObjectId format" });
