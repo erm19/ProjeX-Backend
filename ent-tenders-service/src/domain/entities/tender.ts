@@ -1,12 +1,12 @@
-import { Types } from "mongoose";
+import { Document, Types } from "mongoose";
 import { QuestionType } from "../../core/types";
 
-export interface IParcel {
+export interface IParcel extends Document {
   parcel: string;
   sections: string[];
 }
 
-export interface IQuestionnaire {
+export interface IQuestionnaire extends Document {
   question: string;
   type: QuestionType;
 }

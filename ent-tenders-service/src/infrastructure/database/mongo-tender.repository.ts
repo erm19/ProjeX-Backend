@@ -2,10 +2,20 @@ import { RootFilterQuery } from "mongoose";
 import { ITender } from "../../domain/entities";
 import { ITenderRepository } from "../../domain/repositories";
 import { Tender } from "../orm";
+import { CreateTender } from "../../core/types";
 
 export class MongoTenderRepository implements ITenderRepository {
-  async create(tender: ITender): Promise<ITender> {
-    const newTender = new Tender(tender);
+  async create(tender: CreateTender): Promise<ITender> {
+    const newTender = new Tender({
+      title: tender.title,
+      type: tender.tenderType,
+      creator: tender.username,
+      private: tender.isPrivate,
+      hasInspector: tender.hasInspector,
+      city: tender.city,
+      parcels: tender.parcels,
+      questionnaire: tender.questionnaire,
+    });
     return await newTender.save();
   }
   async findById(id: string): Promise<ITender | null> {

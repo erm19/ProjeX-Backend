@@ -1,2 +1,2 @@
-export * from "./cognito.types";
 export * from "./enums";
+export * from "./tender";
