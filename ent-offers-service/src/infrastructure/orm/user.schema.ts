@@ -1,9 +1,5 @@
-import { Document, model, Schema, Types } from "mongoose";
-
-interface IUser extends Document {
-  email: string;
-  entOffers: Types.ObjectId[];
-}
+import { Schema, model } from "mongoose";
+import { IUser } from "../../domain/entities";
 
 const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true, match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/ },

@@ -1,17 +1,6 @@
-import { Document, model, Schema, Types } from "mongoose";
-import { User } from "./user";
-
-interface IQuestionnaire {
-  questionId: Types.ObjectId;
-  answer: number | boolean | string;
-}
-
-interface IOffer extends Document {
-  tenderId: Types.ObjectId;
-  creator: Types.ObjectId;
-  questionnaire: IQuestionnaire[];
-  files: string[];
-}
+import { Schema, Types, model } from "mongoose";
+import { IQuestionnaire, IOffer } from "../../domain/entities";
+import { User } from "./user.schema";
 
 const QuestionnaireSchema = new Schema<IQuestionnaire>({
   questionId: { type: Schema.Types.ObjectId, required: true },

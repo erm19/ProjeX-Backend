@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { entOffersRouter } from "./routes";
-import { connectDB } from "./providers";
+import { connectDB } from "./infrastructure/database";
+import { entOffersRouter } from "./api/routes";
 
 async function startService() {
   await connectDB();
