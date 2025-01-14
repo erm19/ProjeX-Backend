@@ -1,4 +1,4 @@
-import { createHttpClient } from "../../core/utils";
+import { createHttpClient, handleUnknownError } from "../../core/utils";
 import { Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
 
@@ -14,8 +14,8 @@ const baseController =
         params: req.query,
       });
       res.json(data);
-    } catch (error: any) {
-      res.status(error.status || 500).json({ error: error.message });
+    } catch (error) {
+      handleUnknownError(error);
     }
   };
 

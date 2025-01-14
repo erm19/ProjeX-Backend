@@ -1,4 +1,4 @@
-import { createHttpClient } from "../../core/utils";
+import { createHttpClient, handleUnknownError } from "../../core/utils";
 import { HttpMethod } from "../../core/types";
 import { Request, Response } from "express";
 
@@ -11,8 +11,8 @@ const baseController = (endpoint: string, method: string) => async (req: Request
       headers: { Authorization: req.headers.authorization },
     });
     res.json(data);
-  } catch (error: any) {
-    res.status(error.status || 500).json({ error: error.message });
+  } catch (error) {
+    handleUnknownError(error);
   }
 };
 

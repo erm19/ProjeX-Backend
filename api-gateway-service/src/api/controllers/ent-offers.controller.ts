@@ -1,4 +1,4 @@
-import { createHttpClient } from "../../core/utils";
+import { createHttpClient, handleUnknownError } from "../../core/utils";
 import { Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
 
@@ -13,8 +13,8 @@ const baseController =
         headers: { "x-username": req.headers["x-username"] },
       });
       res.json(data);
-    } catch (error: any) {
-      res.status(error.status || 500).json({ error: error.message });
+    } catch (error) {
+      handleUnknownError(error);
     }
   };
 
