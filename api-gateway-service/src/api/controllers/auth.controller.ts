@@ -1,6 +1,7 @@
-import { createHttpClient, handleUnknownError } from "../../core/utils";
+import { createHttpClient } from "../../core/utils";
 import { HttpMethod } from "../../core/types";
 import { Request, Response } from "express";
+import { convertUnknownToError } from "@urbanix/error-handling";
 
 const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
 
@@ -12,7 +13,7 @@ const baseController = (endpoint: string, method: string) => async (req: Request
     });
     res.json(data);
   } catch (error) {
-    handleUnknownError(error);
+    convertUnknownToError(error);
   }
 };
 

@@ -1,6 +1,7 @@
-import { createHttpClient, handleUnknownError } from "../../core/utils";
+import { createHttpClient } from "../../core/utils";
 import { Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
+import { convertUnknownToError } from "@urbanix/error-handling";
 
 const entTendersHttpClient = createHttpClient(`http://${process.env.ENT_TENDER_ADDRESS}`);
 
@@ -15,7 +16,7 @@ const baseController =
       });
       res.json(data);
     } catch (error) {
-      handleUnknownError(error);
+      convertUnknownToError(error);
     }
   };
 
