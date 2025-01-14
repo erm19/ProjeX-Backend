@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { authRouter } from "./api/routes";
 import { connectDB } from "./infrastructure/database";
+import { errorHandler } from "@urbanix/error-handling";
 
 async function startService() {
   await connectDB();
@@ -11,6 +12,8 @@ async function startService() {
   app.use(cors());
 
   app.use(authRouter);
+
+  app.use(errorHandler);
 
   app.listen(3001, () => {
     console.log("Server running on port 3001");

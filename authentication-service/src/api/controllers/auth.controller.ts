@@ -8,6 +8,7 @@ import {
   SignupUserUseCase,
   VerifyTokenUseCase,
 } from "../../application/use-cases";
+import { convertUnknownToError, InternalServerError, ValidationError } from "@urbanix/error-handling";
 
 const userRepository = new MongoUserRepository();
 const signupUser = new SignupUserUseCase(userRepository);
@@ -32,7 +33,9 @@ export class AuthController {
       });
 
       res.status(201).json({ message: "User registered successfully", user: newUser });
-    } catch (error: any) {}
+    } catch (error) {
+      throw new InternalServerError("Failed to signup user");
+    }
   }
 
   static async login(req: Request, res: Response) {
@@ -48,14 +51,18 @@ export class AuthController {
       });
 
       res.json(response);
-    } catch (error: any) {}
+    } catch (error) {
+      throw new InternalServerError("Failed to login user");
+    }
   }
 
   static async logout(req: Request, res: Response) {
     try {
       await LogoutUserUseCase.execute(req.headers.authorization?.split(" ")[1] || "");
       res.send(true);
-    } catch (error: any) {}
+    } catch (error) {
+      throw new InternalServerError("Failed to logout user");
+    }
   }
 
   static async refresh(req: Request, res: Response) {
@@ -70,21 +77,24 @@ export class AuthController {
       });
 
       res.json(response);
-    } catch (error: any) {}
+    } catch (error) {
+      throw new InternalServerError("Failed to refresh token");
+    }
   }
 
   static async verify(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      res.status(401).json({ message: "No token provided" });
-      return;
+      throw new ValidationError("No Token Provided");
     }
 
     try {
       const username = await VerifyTokenUseCase.execute(token);
 
       res.json({ username: username });
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 }
