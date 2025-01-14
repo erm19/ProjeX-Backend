@@ -2,6 +2,7 @@ import { isValidObjectId, RootFilterQuery } from "mongoose";
 import { IOfferRepository } from "../repositories";
 import { IOffer } from "../entities";
 import { RefType, RefTypes } from "../../core/types";
+import { ValidationError } from "@urbanix/error-handling";
 
 export class ListByRefService {
   private _offerRepo: IOfferRepository;
@@ -13,7 +14,7 @@ export class ListByRefService {
   async execute(refType: RefType, reference: string, limit: number = 20, lastId?: string) {
     const queryFilter: RootFilterQuery<IOffer> = {};
 
-    if (!isValidObjectId(reference)) throw { status: 400, message: "Invalid reference id" };
+    if (!isValidObjectId(reference)) throw new ValidationError("Invalid Reference Id");
 
     if (refType === RefTypes.Tender) queryFilter.tenderId = reference;
 

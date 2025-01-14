@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { IQuestionnaire } from "../entities";
 import { IOfferRepository, IUserRepository } from "../repositories";
+import { NotFoundError } from "@urbanix/error-handling";
 
 export class CreateOfferService {
   private _userRepo: IUserRepository;
@@ -14,7 +15,7 @@ export class CreateOfferService {
   async execute(tenderId: string, username: string, questionnaire: IQuestionnaire[]) {
     const user = await this._userRepo.findByEmail(username);
 
-    if (!user) throw { status: 404, message: "User not found!" };
+    if (!user) throw new NotFoundError("User Not Found!");
 
     return await this._offerRepo.create(tenderId, (user._id as ObjectId).toString(), questionnaire);
   }

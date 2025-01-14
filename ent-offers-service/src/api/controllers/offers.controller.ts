@@ -3,6 +3,7 @@ import { MongoOfferRepository, MongoUserRepository } from "../../infrastructure/
 import { CreateOfferService, ListByRefService } from "../../domain/services";
 import { CreateOfferUseCase, OffersByCreatorUseCase, OffersByTenderUseCase } from "../../application/use-cases";
 import { IQuestionnaire } from "../../domain/entities";
+import { convertUnknownToError } from "@urbanix/error-handling";
 
 const offerRepository = new MongoOfferRepository();
 const userRepository = new MongoUserRepository();
@@ -24,7 +25,9 @@ export class OffersController {
       );
 
       res.json(result);
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 
   static async create(req: Request, res: Response) {
@@ -36,7 +39,9 @@ export class OffersController {
       );
 
       res.status(201).json({ message: "Offer created successfully", offer });
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 
   static async myOffers(req: Request, res: Response) {
@@ -48,6 +53,8 @@ export class OffersController {
       );
 
       res.json(result);
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 }
