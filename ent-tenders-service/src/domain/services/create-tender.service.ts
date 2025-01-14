@@ -1,3 +1,4 @@
+import { NotFoundError } from "@urbanix/error-handling";
 import { CreateTender } from "../../core/types";
 import { ITenderRepository, IUserRepository } from "../../domain/repositories";
 
@@ -13,7 +14,7 @@ export class CreateTenderService {
   async execute(tender: CreateTender) {
     const user = await this._userRepo.findByEmail(tender.username);
 
-    if (!user) throw { status: 404, message: "User not found!" };
+    if (!user) throw new NotFoundError("User Not Found!");
 
     return await this._tenderRepo.create({
       title: tender.title,

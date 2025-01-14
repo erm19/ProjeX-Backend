@@ -3,6 +3,7 @@ import { CreateTenderUseCase, GetTenderUseCase, ListTendersUseCase } from "../..
 import { CreateTenderService, ListTendersService } from "../../domain/services";
 import { tenderRepo, userRepo } from "../../main";
 import { isValidObjectId } from "mongoose";
+import { convertUnknownToError, ValidationError } from "@urbanix/error-handling";
 
 const createTenderService = new CreateTenderService(userRepo, tenderRepo);
 const createTenderUseCase = new CreateTenderUseCase(createTenderService);
@@ -21,20 +22,23 @@ export class TendersController {
     try {
       const tenders = await listTendersUseCase.execute(citiesFilter, limit, lastId);
       res.json({ tenders });
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 
   static async details(req: Request, res: Response) {
     const tenderId = req.params.tenderId || "";
     if (isValidObjectId(tenderId)) {
-      res.status(400).json({ message: "Invalid ObjectId format" });
-      return;
+      throw new ValidationError("Invalid ObjectId");
     }
 
     try {
       const tender = getTenderUseCase.execute(tenderId);
       res.json({ tender: tender });
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 
   static async create(req: Request, res: Response) {
@@ -51,7 +55,9 @@ export class TendersController {
         city: req.body.city || "",
       });
       res.status(201).json({ message: "Tender created successfully", tender: newTender });
-    } catch (error: any) {}
+    } catch (error) {
+      convertUnknownToError(error);
+    }
   }
 
   static async myTenders(req: Request, res: Response) {}
