@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true, // Enables generation of .d.ts files
+    "declarationDir": "dist", // Specifies the output directory for .d.ts files
+    "emitDeclarationOnly": false // Ensures JavaScript and .d.ts files are both emitted
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
