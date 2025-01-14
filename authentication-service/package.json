@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.693.0",
+    "@urbanix/error-handling": "^1.0.2",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
