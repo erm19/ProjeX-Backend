@@ -1,7 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios";
-import expressAsyncHandler from "express-async-handler";
 import { createHttpClient } from "../../core/utils";
-import { HttpMethod } from "../../types";
+import { HttpMethod } from "../../core/types";
 import { Request, Response } from "express";
 
 const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);

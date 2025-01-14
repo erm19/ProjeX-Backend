@@ -1,8 +1,6 @@
-import axios, { HttpStatusCode } from "axios";
-import expressAsyncHandler from "express-async-handler";
 import { createHttpClient } from "../../core/utils";
 import { Request, Response } from "express";
-import { HttpMethod } from "../../types";
+import { HttpMethod } from "../../core/types";
 
 const entTendersHttpClient = createHttpClient(`http://${process.env.ENT_TENDER_ADDRESS}`);
 

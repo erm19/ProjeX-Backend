@@ -1,6 +1,6 @@
 import { createHttpClient } from "../../core/utils";
 import { Request, Response } from "express";
-import { HttpMethod } from "../../types";
+import { HttpMethod } from "../../core/types";
 
 const entOffersHttpClient = createHttpClient(`http://${process.env.ENT_OFFERS_ADDRESS}`);
 
