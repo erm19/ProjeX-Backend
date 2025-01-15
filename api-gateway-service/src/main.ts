@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { appRouter } from "./routes";
+import { appRouter } from "./api/routes";
+import { errorHandler } from "@urbanix/error-handling";
 
 async function startService() {
   const app = express();
@@ -8,6 +9,8 @@ async function startService() {
   app.use(cors());
 
   app.use("/", appRouter);
+
+  app.use(errorHandler);
 
   app.listen(3000, () => {
     console.log("Server running on port 3000");

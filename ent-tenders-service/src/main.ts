@@ -1,7 +1,11 @@
 import express from "express";
 import cors from "cors";
-import { entTendersRouter } from "./routes";
-import { connectDB } from "./providers";
+import { connectDB, MongoTenderRepository, MongoUserRepository } from "./infrastructure/database";
+import { entTendersRouter } from "./api/routes";
+import { errorHandler } from "@urbanix/error-handling";
+
+export const userRepo = new MongoUserRepository();
+export const tenderRepo = new MongoTenderRepository();
 
 async function startService() {
   await connectDB();
@@ -11,6 +15,8 @@ async function startService() {
   app.use(cors());
 
   app.use("/", entTendersRouter);
+
+  app.use(errorHandler);
 
   app.listen(3002, () => {
     console.log("Server running on port 3002");

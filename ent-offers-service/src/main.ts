@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
-import { entOffersRouter } from "./routes";
-import { connectDB } from "./providers";
+import { connectDB } from "./infrastructure/database";
+import { entOffersRouter } from "./api/routes";
+import { errorHandler } from "@urbanix/error-handling";
 
 async function startService() {
   await connectDB();
@@ -11,6 +12,8 @@ async function startService() {
   app.use(cors());
 
   app.use("/", entOffersRouter);
+
+  app.use(errorHandler);
 
   app.listen(3003, () => {
     console.log("Server running on port 3003");
