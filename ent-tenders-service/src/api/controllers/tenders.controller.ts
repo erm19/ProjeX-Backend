@@ -60,5 +60,7 @@ export class TendersController {
     }
   }
 
-  static async myTenders(req: Request, res: Response) {}
+  static async myTenders(req: Request, res: Response) {
+    res.json({ tenders: [] });
+  }
 }
