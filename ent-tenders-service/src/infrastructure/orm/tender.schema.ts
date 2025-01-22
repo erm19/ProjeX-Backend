@@ -1,7 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 import { IParcel, IQuestionnaire, ITender } from "../../domain/entities";
-import { QuestionType } from "../../types";
 import { User } from "./user.schema";
+import { QuestionType } from "../../core/types";
 
 const ParcelSchema = new Schema<IParcel>({
   parcel: { type: String, required: true },

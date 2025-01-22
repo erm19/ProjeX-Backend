@@ -1,6 +1,4 @@
-import { generateSecretHash } from "core/utils";
 import { Request, Response } from "express";
-import { MongoUserRepository } from "../../infrastructure/database";
 import {
   LoginUserUseCase,
   LogoutUserUseCase,
@@ -8,6 +6,8 @@ import {
   SignupUserUseCase,
   VerifyTokenUseCase,
 } from "../../application/use-cases";
+import { MongoUserRepository } from "../../infrastructure/database";
+import { generateSecretHash } from "../../core/utils";
 import { convertUnknownToError, InternalServerError, ValidationError } from "@urbanix/error-handling";
 
 const userRepository = new MongoUserRepository();
