@@ -17,6 +17,6 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
 };
 
 export const convertUnknownToError = (err: unknown) => {
-  if (err instanceof BaseError) throw err;
-  throw new InternalServerError();
+  if (err instanceof BaseError) return err;
+  return new InternalServerError();
 };
