@@ -8,6 +8,7 @@ async function startService() {
   await connectDB();
 
   const app = express();
+  const PORT = process.env.PORT || 3001;
   app.use(express.json());
   app.use(cors());
 
@@ -15,8 +16,8 @@ async function startService() {
 
   app.use(errorHandler);
 
-  app.listen(3001, () => {
-    console.log("Server running on port 3001");
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

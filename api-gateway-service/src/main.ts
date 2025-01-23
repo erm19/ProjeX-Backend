@@ -5,6 +5,9 @@ import { errorHandler } from "@urbanix/error-handling";
 
 async function startService() {
   const app = express();
+
+  const PORT = process.env.PORT || 3000;
+
   app.use(express.json());
   app.use(cors());
 
@@ -12,8 +15,8 @@ async function startService() {
 
   app.use(errorHandler);
 
-  app.listen(3000, () => {
-    console.log("Server running on port 3000");
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
