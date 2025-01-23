@@ -5,3 +5,4 @@ export * from "./errors/internal-server.error";
 export * from "./errors/not-found.error";
 export * from "./errors/validation.error";
 export { errorHandler, convertUnknownToError } from "./middleware/error";
+export * from "./utils";
