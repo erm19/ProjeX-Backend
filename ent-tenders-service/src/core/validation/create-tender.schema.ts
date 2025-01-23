@@ -26,4 +26,4 @@ export const createTenderSchema = Joi.object({
   city: Joi.string().required(),
   parcels: Joi.array().items(parcelSchema).min(1).required(),
   questionnaire: Joi.array().items(questionnaireSchema).min(1).required(),
-});
+}).unknown();

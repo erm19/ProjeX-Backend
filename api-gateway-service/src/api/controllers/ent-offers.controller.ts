@@ -1,12 +1,13 @@
 import { createHttpClient } from "../../core/utils";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
 import { convertUnknownToError } from "@urbanix/error-handling";
 
 const entOffersHttpClient = createHttpClient(`http://${process.env.ENT_OFFERS_ADDRESS}`);
 
 const baseController =
-  (getEndpoint: (req: Request) => string, method: string) => async (req: Request, res: Response) => {
+  (getEndpoint: (req: Request) => string, method: string) =>
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       const endpoint = getEndpoint(req);
       const data = await entOffersHttpClient(endpoint, method, {
@@ -15,7 +16,7 @@ const baseController =
       });
       res.json(data);
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   };
 

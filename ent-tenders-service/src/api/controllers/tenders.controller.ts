@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { CreateTenderUseCase, GetTenderUseCase, ListTendersUseCase } from "../../application/use-cases";
 import { CreateTenderService, ListTendersService } from "../../domain/services";
 import { tenderRepo, userRepo } from "../../main";
@@ -12,7 +12,7 @@ const listTendersService = new ListTendersService(tenderRepo);
 const listTendersUseCase = new ListTendersUseCase(listTendersService);
 
 export class TendersController {
-  static async list(req: Request, res: Response) {
+  static async list(req: Request, res: Response, next: NextFunction) {
     const citiesFilter = (
       Array.isArray(req.query.cities) ? req.query.cities : req.query.cities ? [req.query.cities] : []
     ) as string[];
@@ -23,11 +23,11 @@ export class TendersController {
       const tenders = await listTendersUseCase.execute(citiesFilter, limit, lastId);
       res.json({ tenders });
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   }
 
-  static async details(req: Request, res: Response) {
+  static async details(req: Request, res: Response, next: NextFunction) {
     const tenderId = req.params.tenderId || "";
     if (isValidObjectId(tenderId)) {
       throw new ValidationError("Invalid ObjectId");
@@ -37,11 +37,11 @@ export class TendersController {
       const tender = getTenderUseCase.execute(tenderId);
       res.json({ tender: tender });
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   }
 
-  static async create(req: Request, res: Response) {
+  static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const newTender = createTenderUseCase.execute({
         title: req.body.title || "",
@@ -56,7 +56,7 @@ export class TendersController {
       });
       res.status(201).json({ message: "Tender created successfully", tender: newTender });
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   }
 

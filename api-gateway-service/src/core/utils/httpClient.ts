@@ -1,4 +1,5 @@
-import axios, { AxiosHeaders, AxiosRequestConfig } from "axios";
+import { BaseError, convertUnknownToError, throwErrorByStatus } from "@urbanix/error-handling";
+import axios, { AxiosRequestConfig } from "axios";
 
 export const createHttpClient =
   (baseUrl: string) =>
@@ -12,7 +13,6 @@ export const createHttpClient =
       });
       return res.data;
     } catch (err: any) {
-      const status = err.response?.status || 500;
-      throw { status, error: err.message };
+      throwErrorByStatus(err.status, err.response.data.data);
     }
   };

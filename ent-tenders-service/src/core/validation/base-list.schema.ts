@@ -13,4 +13,4 @@ export const baseListSchema = Joi.object({
     .custom((value, helpers) => {
       if (value && !isValidObjectId(value)) return helpers.message({ message: "LastId must be a valid Id" });
     }),
-});
+}).unknown();

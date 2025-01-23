@@ -28,4 +28,4 @@ export const createOfferSchema = Joi.object({
       return value;
     }),
   questionnaire: Joi.array().items(questionnaireSchema).min(1).required(),
-});
+}).unknown();

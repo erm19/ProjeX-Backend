@@ -8,4 +8,4 @@ export const detailsSchema = Joi.object({
       if (value && !isValidObjectId(value)) return helpers.message({ message: "Invalid tender Id" });
       return value;
     }),
-});
+}).unknown();

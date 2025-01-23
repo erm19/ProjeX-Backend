@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { MongoOfferRepository, MongoUserRepository } from "../../infrastructure/database";
 import { CreateOfferService, ListByRefService } from "../../domain/services";
 import { CreateOfferUseCase, OffersByCreatorUseCase, OffersByTenderUseCase } from "../../application/use-cases";
@@ -16,7 +16,7 @@ const offersByCreatorUseCase = new OffersByCreatorUseCase(listByRefService);
 const createOfferUseCase = new CreateOfferUseCase(createOfferServcie);
 
 export class OffersController {
-  static async listByTender(req: Request, res: Response) {
+  static async listByTender(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await offersByTenderUseCase.execute(
         req.params.tenderId || "",
@@ -26,11 +26,11 @@ export class OffersController {
 
       res.json(result);
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   }
 
-  static async create(req: Request, res: Response) {
+  static async create(req: Request, res: Response, next: NextFunction) {
     try {
       const offer = await createOfferUseCase.execute(
         req.body.tenderId as string,
@@ -40,11 +40,11 @@ export class OffersController {
 
       res.status(201).json({ message: "Offer created successfully", offer });
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   }
 
-  static async myOffers(req: Request, res: Response) {
+  static async myOffers(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await offersByCreatorUseCase.execute(
         (req.headers["x-username"] || "") as string,
@@ -54,7 +54,7 @@ export class OffersController {
 
       res.json(result);
     } catch (error) {
-      convertUnknownToError(error);
+      next(convertUnknownToError(error));
     }
   }
 }

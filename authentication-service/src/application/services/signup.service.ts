@@ -14,6 +14,6 @@ export class UserSignupService {
     await AwsCognitoProvider.signup(user);
 
     // Save user to the repository
-    return this._userRepo.create(user);
+    return this._userRepo.create({ ...user, companyName: user.companyName || user.officeName });
   }
 }

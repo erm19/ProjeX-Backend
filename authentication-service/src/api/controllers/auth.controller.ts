@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   LoginUserUseCase,
   LogoutUserUseCase,
@@ -14,7 +14,7 @@ const userRepository = new MongoUserRepository();
 const signupUser = new SignupUserUseCase(userRepository);
 
 export class AuthController {
-  static async signup(req: Request, res: Response) {
+  static async signup(req: Request, res: Response, next: NextFunction) {
     const CLIENT_SECRET = process.env.COGNITO_CLIENT_SECRET || "";
     const CLIENT_ID = process.env.AWS_APP_CLIENT_ID || "";
 
@@ -34,11 +34,11 @@ export class AuthController {
 
       res.status(201).json({ message: "User registered successfully", user: newUser });
     } catch (error) {
-      throw new InternalServerError("Failed to signup user");
+      next(new InternalServerError("Failed to signup user"));
     }
   }
 
-  static async login(req: Request, res: Response) {
+  static async login(req: Request, res: Response, next: NextFunction) {
     const CLIENT_SECRET = process.env.COGNITO_CLIENT_SECRET || "";
     const CLIENT_ID = process.env.AWS_APP_CLIENT_ID || "";
 
@@ -52,20 +52,20 @@ export class AuthController {
 
       res.json(response);
     } catch (error) {
-      throw new InternalServerError("Failed to login user");
+      next(new InternalServerError("Failed to login user"));
     }
   }
 
-  static async logout(req: Request, res: Response) {
+  static async logout(req: Request, res: Response, next: NextFunction) {
     try {
       await LogoutUserUseCase.execute(req.headers.authorization?.split(" ")[1] || "");
       res.send(true);
     } catch (error) {
-      throw new InternalServerError("Failed to logout user");
+      next(new InternalServerError("Failed to logout user"));
     }
   }
 
-  static async refresh(req: Request, res: Response) {
+  static async refresh(req: Request, res: Response, next: NextFunction) {
     const CLIENT_SECRET = process.env.COGNITO_CLIENT_SECRET || "";
     const CLIENT_ID = process.env.AWS_APP_CLIENT_ID || "";
 
@@ -78,15 +78,16 @@ export class AuthController {
 
       res.json(response);
     } catch (error) {
-      throw new InternalServerError("Failed to refresh token");
+      next(new InternalServerError("Failed to refresh token"));
     }
   }
 
-  static async verify(req: Request, res: Response) {
+  static async verify(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      throw new ValidationError("No Token Provided");
+      next(new ValidationError("No Token Provided"));
+      return;
     }
 
     try {
