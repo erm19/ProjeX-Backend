@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  api-gateway-service:
+    build:
+      context: ./api-gateway-service
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api-gateway-service:/api-gateway-service
+      - /api-gateway-service/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+
+  authentication-service:
+    build:
+      context: ./authentication-service
+      target: development
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./authentication-service:/authentication-service
+      - /authentication-service/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+
+  ent-tenders-service:
+    build:
+      context: ./ent-tenders-service
+      target: development
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./ent-tenders-service:/ent-tenders-service
+      - /ent-tenders-service/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+
+  ent-offers-service:
+    build:
+      context: ./ent-offers-service
+      target: development
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./ent-offers-service:/ent-offers-service
+      - /ent-offers-service/node_modules
+    environment:
+      NODE_ENV: development
+    command: npm run dev

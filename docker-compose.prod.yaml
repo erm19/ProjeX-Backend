@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  api-gateway-service:
+    build:
+      context: ./api-gateway-service
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    command: node dist/main.js
+
+  authentication-service:
+    build:
+      context: ./authentication-service
+      target: production
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+    command: node dist/main.js
+
+  ent-tenders-service:
+    build:
+      context: ./ent-tenders-service
+      target: production
+    ports:
+      - "3002:3000"
+    environment:
+      NODE_ENV: production
+    command: node dist/main.js
+
+  ent-offers-service:
+    build:
+      context: ./ent-offers-service
+      target: production
+    ports:
+      - "3003:3000"
+    environment:
+      NODE_ENV: production
+    command: node dist/main.js
