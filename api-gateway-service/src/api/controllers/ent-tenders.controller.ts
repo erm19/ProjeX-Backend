@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
 import { convertUnknownToError } from "@urbanix/error-handling";
 
-const entTendersHttpClient = createHttpClient(`http://${process.env.ENT_TENDER_ADDRESS}`);
+const entTendersHttpClient = createHttpClient(`${process.env.ENT_TENDER_ADDRESS}`);
 
 const baseController =
   (getEndpoint: (req: Request) => string, method: string) =>

@@ -3,7 +3,7 @@ import { HttpMethod } from "../../core/types";
 import { NextFunction, Request, Response } from "express";
 import { convertUnknownToError } from "@urbanix/error-handling";
 
-const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
+const authHttpClient = createHttpClient(`${process.env.AUTH_ADDRESS}`);
 
 const baseController =
   (endpoint: string, method: string) => async (req: Request, res: Response, next: NextFunction) => {
