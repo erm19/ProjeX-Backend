@@ -7,12 +7,12 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   if (err instanceof BaseError) {
     const { statusCode, message } = err;
 
-    res.status(statusCode).json({ message });
+    res.status(statusCode).json({ data: message });
     return;
   }
 
   // Unhandled errors
-  res.status(500).json({ message: "Something went wrong" });
+  res.status(500).json({ data: "Something went wrong" });
   return;
 };
 
