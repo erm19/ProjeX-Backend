@@ -18,4 +18,4 @@ authRouter.get("/logout", validate(tokenSchema), validateTokenGuard, AuthControl
 
 authRouter.post("/refresh", validate(refreshTokenSchema), validateTokenGuard, AuthController.refresh);
 
-authRouter.post("/verify", validate(tokenSchema), AuthController.verify);
+authRouter.get("/verify", validate(tokenSchema), AuthController.verify);

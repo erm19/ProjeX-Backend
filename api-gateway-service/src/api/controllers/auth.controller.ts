@@ -26,4 +26,4 @@ export const logoutController = baseController("logout", HttpMethod.GET);
 
 export const refreshController = baseController("refresh", HttpMethod.POST);
 
-export const verifyController = baseController("verify", HttpMethod.POST);
+export const verifyController = baseController("verify", HttpMethod.GET);
