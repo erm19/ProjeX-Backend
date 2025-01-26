@@ -12,7 +12,7 @@ export const connectDB = async (): Promise<Connection> => {
 
   try {
     const db = await mongoose.connect(
-      `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@cluster0.czpfa.mongodb.net/ProjeX`
+      `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.DB_CLUSTER_URL}/${process.env.DB_NAME}?retryWrites=true&w=majority`
     );
     isConnected = true;
     console.log("Database connected successfully");
