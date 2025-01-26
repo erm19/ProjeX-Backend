@@ -8,8 +8,8 @@
   "env": {
     "NODE_ENV": "development",
     "PORT": 3000,
-    "AUTH_ADDRESS": "localhost:3001",
-    "ENT_TENDER_ADDRESS": "localhost:3002",
-    "ENT_OFFERS_ADDRESS": "localhost:3003"
+    "AUTH_ADDRESS": "http://localhost:3001",
+    "ENT_TENDER_ADDRESS": "http://localhost:3002",
+    "ENT_OFFERS_ADDRESS": "http://localhost:3003"
   }
 }

@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   api-gateway-service:
     build:
@@ -9,13 +7,12 @@ services:
       - "3000:3000"
     volumes:
       - ./api-gateway-service:/api-gateway-service
-      - /api-gateway-service/node_modules
     env_file:
       - ./api-gateway-service/.env
     environment:
-      AUTH_ADDRESS: http://authentication-service:3000
-      ENT_TENDER_ADDRESS: http://ent-tenders-service:3000
-      ENT_OFFERS_ADDRESS: http://ent-offers-service:3000
+      AUTH_ADDRESS: http://authentication-service:3001
+      ENT_TENDER_ADDRESS: http://ent-tenders-service:3002
+      ENT_OFFERS_ADDRESS: http://ent-offers-service:3003
     command: npm run dev
 
   authentication-service:
@@ -23,10 +20,9 @@ services:
       context: ./authentication-service
       target: development
     ports:
-      - "3001:3000"
+      - "3001:3001"
     volumes:
       - ./authentication-service:/authentication-service
-      - /authentication-service/node_modules
     env_file:
       - ./authentication-service/.env
     command: npm run dev
@@ -36,10 +32,9 @@ services:
       context: ./ent-tenders-service
       target: development
     ports:
-      - "3002:3000"
+      - "3002:3002"
     volumes:
       - ./ent-tenders-service:/ent-tenders-service
-      - /ent-tenders-service/node_modules
     env_file:
       - ./ent-tenders-service/.env
     command: npm run dev
@@ -49,12 +44,9 @@ services:
       context: ./ent-offers-service
       target: development
     ports:
-      - "3003:3000"
+      - "3003:3003"
     volumes:
       - ./ent-offers-service:/ent-offers-service
-      - /ent-offers-service/node_modules
     env_file:
       - ./ent-offers-service/.env
-    environment:
-      NODE_ENV: development
     command: npm run dev

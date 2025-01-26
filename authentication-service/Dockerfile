@@ -6,7 +6,7 @@ COPY package*.json ./
 # Development Stage
 FROM base AS development
 ENV NODE_ENV=development
-RUN npm install
+RUN npm ci
 COPY . .
 CMD ["npm", "run", "dev"]
 
