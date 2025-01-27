@@ -2,7 +2,7 @@
 
 import { CognitoIdentityProvider, SignUpCommandInput } from "@aws-sdk/client-cognito-identity-provider";
 import { SignupParams } from "../../../core/types";
-import { AwsCognitoProvider } from "../aws";
+import { AwsCognitoProvider } from "../../../infrastructure/providers/aws";
 
 jest.mock("@aws-sdk/client-cognito-identity-provider");
 
