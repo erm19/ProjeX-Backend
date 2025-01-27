@@ -1,21 +1,49 @@
 import { Channel } from "amqplib";
 import { InternalServerError } from "@urbanix/error-handling";
 
-export async function consumeEvents(channel: Channel, queueName: string, handleEvent: (data: any) => Promise<void>) {
+export async function consumeEvents(
+  channel: Channel,
+  queueName: string,
+  handleEvent: (data: any) => Promise<void>,
+  options: { retryDelayMs?: number; maxRetries?: number; dlqName?: string } = {}
+) {
+  const { retryDelayMs = 1000, maxRetries = 5, dlqName } = options;
+
   try {
     await channel.assertQueue(queueName, { durable: true });
+
+    if (dlqName) {
+      await channel.assertQueue(dlqName, { durable: true });
+    }
+
     console.log(`Waiting for messages in queue: ${queueName}`);
 
     channel.consume(queueName, async (message) => {
       if (message) {
+        const headers = message.properties.headers || {};
+        const retryCount = (headers["x-retry-count"] || 0) + 1;
         const data = JSON.parse(message.content.toString());
+
         try {
           await handleEvent(data); // Process the event
           channel.ack(message); // Acknowledge message
         } catch (err) {
           console.error("Error handling message:", err);
-          channel.nack(message, false, false); // Reject without requeueing
-          throw new InternalServerError("Error handling message");
+
+          if (retryCount <= maxRetries) {
+            console.log(`Retrying message from queue: ${queueName}, attempt ${retryCount}/${maxRetries}`);
+
+            // Requeue the message with updated retry count
+            channel.sendToQueue(queueName, message.content, {
+              persistent: true,
+              headers: { "x-retry-count": retryCount },
+            });
+          } else if (dlqName) {
+            console.log(`Sending message to DLQ: ${dlqName} after ${maxRetries} failed attempts`);
+            channel.sendToQueue(dlqName, message.content, { persistent: true });
+          }
+
+          channel.ack(message); // Acknowledge the original message regardless of retry or DLQ
         }
       }
     });
