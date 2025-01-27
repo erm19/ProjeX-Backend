@@ -25,6 +25,7 @@
     "@aws-sdk/credential-providers": "^3.734.0",
     "@aws-sdk/rds-signer": "^3.734.0",
     "@urbanix/error-handling": "^1.1.2",
+    "@urbanix/rabbitmq": "^1.0.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
