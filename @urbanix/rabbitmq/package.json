@@ -1,7 +1,7 @@
 {
   "name": "@urbanix/rabbitmq",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Shared package for RabbitMQ connection and event handling logic",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -9,7 +9,7 @@
     "prepublishOnly": "npm run clean && npm run build"
   },
   "keywords": [],
-  "author": "",
+  "author": "Eyal Moskowitz",
   "license": "ISC",
   "devDependencies": {
     "@types/amqplib": "^0.10.6",
