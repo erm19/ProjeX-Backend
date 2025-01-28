@@ -12,7 +12,7 @@ export class EntOfferEvents {
 
       const user = await this.findUserById(data.userId);
 
-      const userOffers = user.offers || [];
+      const userOffers = user.entOffers || [];
 
       const OfferIndex = userOffers.findIndex((offer) => offer.toString() === data.id);
 
@@ -21,7 +21,7 @@ export class EntOfferEvents {
         console.log(`Saving user to local database: ID=${data.id}, userId=${data.userId}`);
 
         userOffers.push(new Schema.Types.ObjectId(data.id));
-        user.offers = userOffers;
+        user.entOffers = userOffers;
         await user.save();
       }
     } catch (err) {
@@ -37,7 +37,7 @@ export class EntOfferEvents {
 
       const user = await this.findUserById(data.userId);
 
-      const userOffers = user.offers || [];
+      const userOffers = user.entOffers || [];
 
       const offerIndex = userOffers.findIndex((offer) => offer.toString() === data.id);
 
@@ -46,7 +46,7 @@ export class EntOfferEvents {
         console.log(`Removing user from local database: ID=${data.id}, userId=${data.userId}`);
 
         userOffers.splice(offerIndex, 1);
-        user.offers = userOffers;
+        user.entOffers = userOffers;
         await user.save();
       }
     } catch (err) {

@@ -12,7 +12,7 @@ export class EntTenderEvents {
 
       const user = await this.findUserById(data.userId);
 
-      const userTenders = user.tenders || [];
+      const userTenders = user.entTenders || [];
 
       const tenderIndex = userTenders.findIndex((tender) => tender.toString() === data.id);
 
@@ -21,7 +21,7 @@ export class EntTenderEvents {
         console.log(`Saving user to local database: ID=${data.id}, userId=${data.userId}`);
 
         userTenders.push(new Schema.Types.ObjectId(data.id));
-        user.tenders = userTenders;
+        user.entTenders = userTenders;
         await user.save();
       }
     } catch (err) {
@@ -37,7 +37,7 @@ export class EntTenderEvents {
 
       const user = await this.findUserById(data.userId);
 
-      const userTenders = user.tenders || [];
+      const userTenders = user.entTenders || [];
 
       const tenderIndex = userTenders.findIndex((tender) => tender.toString() === data.id);
 
@@ -46,7 +46,7 @@ export class EntTenderEvents {
         console.log(`Removing user from local database: ID=${data.id}, userId=${data.userId}`);
 
         userTenders.splice(tenderIndex, 1);
-        user.tenders = userTenders;
+        user.entTenders = userTenders;
         await user.save();
       }
     } catch (err) {

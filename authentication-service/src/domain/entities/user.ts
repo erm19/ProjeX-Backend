@@ -6,6 +6,6 @@ export interface IUser extends Document {
   licenseNum: string;
   companyName: string;
   companyNum: string;
-  tenders: ObjectId[];
-  offers: ObjectId[];
+  entTenders: ObjectId[];
+  entOffers: ObjectId[];
 }
