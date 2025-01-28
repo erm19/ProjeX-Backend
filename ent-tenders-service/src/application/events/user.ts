@@ -1,15 +1,16 @@
 import { isValidObjectId, Schema } from "mongoose";
+import { UserService } from "../services/user.service";
+import { MongoUserRepository } from "../../infrastructure/database";
 
 export class UserEvent {
+  private static _userService = new UserService(new MongoUserRepository());
   static async processUserCreated(data: { id: string; email: string }) {
     console.log("Processing UserCreated event:", data);
     try {
       this.validateId(data);
 
       // Save user to database
-      console.log(`Saving user to database: ID=${data.id}, email=${data.email}`);
-
-      console.log(`User ${data.id} created`);
+      this._userService.handleCreatedEvent(data.id, data.email);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -21,9 +22,7 @@ export class UserEvent {
       this.validateId(data);
 
       // Update user in database
-      console.log(`Updating user in database: ID=${data.id}, tenders=${data.tenders}`);
-
-      console.log(`User ${data.id} updated`);
+      this._userService.handleUpdatedEvent(data.id, data.tenders);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -35,9 +34,7 @@ export class UserEvent {
       this.validateId(data);
 
       // Delete user from database
-      console.log(`Deleting user from database: ID=${data.id}`);
-
-      console.log(`User ${data.id} deleted`);
+      this._userService.handleDeletedEvent(data.id);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
