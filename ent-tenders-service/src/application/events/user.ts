@@ -2,7 +2,7 @@ import { isValidObjectId, Schema } from "mongoose";
 import { UserService } from "../services/user.service";
 import { MongoUserRepository } from "../../infrastructure/database";
 
-export class UserEvent {
+export class UserEvents {
   private static _userService = new UserService(new MongoUserRepository());
   static async processUserCreated(data: { id: string; email: string }) {
     console.log("Processing UserCreated event:", data);
