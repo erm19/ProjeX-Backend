@@ -1,6 +1,6 @@
 import { consumeEvents } from "@urbanix/rabbitmq";
 import { rabbitmqChannel } from "../providers";
-import { UserEvents } from "../../application/events";
+import { OfferEvents, UserEvents } from "../../application/events";
 
 export async function initializeEventHandlers() {
   // Consume TenderCreated events
@@ -20,6 +20,18 @@ export async function initializeEventHandlers() {
     retryDelayMs: 2000,
     maxRetries: 3,
     dlqName: "user_deleted_dlq",
+  });
+
+  await consumeEvents(rabbitmqChannel, "ent_offer_created", OfferEvents.processOfferCreated, {
+    retryDelayMs: 2000,
+    maxRetries: 3,
+    dlqName: "offer_created_dlq",
+  });
+
+  await consumeEvents(rabbitmqChannel, "ent_offer_deleted", OfferEvents.processOfferDeleted, {
+    retryDelayMs: 2000,
+    maxRetries: 3,
+    dlqName: "offer_deleted_dlq",
   });
 
   console.log("Event handlers initialized");

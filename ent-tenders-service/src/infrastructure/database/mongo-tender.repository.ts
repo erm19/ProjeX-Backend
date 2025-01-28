@@ -30,4 +30,8 @@ export class MongoTenderRepository implements ITenderRepository {
   async updateOffers(tenderId: string, offers: Schema.Types.ObjectId[]): Promise<ITender | null> {
     return await Tender.findByIdAndUpdate(tenderId, { offers: offers });
   }
+
+  async delete(id: string): Promise<void> {
+    await Tender.findByIdAndDelete(id);
+  }
 }
