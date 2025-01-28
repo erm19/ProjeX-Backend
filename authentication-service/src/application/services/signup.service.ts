@@ -1,6 +1,8 @@
 import { SignupParams } from "../../core/types";
 import { IUserRepository } from "../../domain/repositories";
+import { User } from "../../infrastructure/orm";
 import { AwsCognitoProvider } from "../../infrastructure/providers";
+import { UserEvents } from "../events";
 
 export class UserSignupService {
   private _userRepo: IUserRepository;
@@ -14,6 +16,10 @@ export class UserSignupService {
     await AwsCognitoProvider.signup(user);
 
     // Save user to the repository
-    return this._userRepo.create({ ...user, companyName: user.companyName || user.officeName });
+    const newUser = await this._userRepo.create({ ...user, companyName: user.companyName || user.officeName });
+
+    await UserEvents.onUserCreated(newUser);
+
+    return newUser;
   }
 }
