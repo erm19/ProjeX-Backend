@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import { Document, Schema, Types } from "mongoose";
 import { QuestionType } from "../../core/types";
 
 export interface IParcel extends Document {
@@ -22,4 +22,5 @@ export interface ITender extends Document {
   hasInspector: boolean;
   private: boolean;
   files: string[];
+  offers: Schema.Types.ObjectId[];
 }

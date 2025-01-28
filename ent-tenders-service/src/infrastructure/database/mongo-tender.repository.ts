@@ -1,4 +1,4 @@
-import { RootFilterQuery } from "mongoose";
+import { RootFilterQuery, Schema } from "mongoose";
 import { ITender } from "../../domain/entities";
 import { ITenderRepository } from "../../domain/repositories";
 import { Tender } from "../orm";
@@ -25,5 +25,9 @@ export class MongoTenderRepository implements ITenderRepository {
     return await Tender.find(filter, { title: true, type: true, parcels: true, endDate: true, city: true })
       .sort({ _id: 1 })
       .limit(limit + 1);
+  }
+
+  async updateOffers(tenderId: string, offers: Schema.Types.ObjectId[]): Promise<ITender | null> {
+    return await Tender.findByIdAndUpdate(tenderId, { offers: offers });
   }
 }

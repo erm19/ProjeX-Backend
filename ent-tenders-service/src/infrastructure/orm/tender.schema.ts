@@ -33,6 +33,7 @@ const TenderSchema = new Schema<ITender>({
   parcels: [ParcelSchema],
   questionnaire: [QuestionnaireSchema],
   files: [{ type: String }],
+  offers: [{ type: Schema.Types.ObjectId }],
 });
 
 TenderSchema.post("save", async (tender) => {
