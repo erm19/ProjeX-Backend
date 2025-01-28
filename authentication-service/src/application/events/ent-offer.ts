@@ -1,27 +1,27 @@
-import { NotFoundError, ValidationError } from "@urbanix/error-handling";
+import { isValidObjectId, Schema } from "mongoose";
 import { MongoUserRepository } from "../../infrastructure/database";
-import { isValidObjectId, Schema, Types } from "mongoose";
+import { NotFoundError, ValidationError } from "@urbanix/error-handling";
 
-export class EntTenderEvents {
+export class EntOfferEvents {
   private static _userRepo = new MongoUserRepository();
-  static async processTenderCreated(data: { id: string; userId: string }) {
+  static async processOfferCreated(data: { id: string; userId: string }) {
     try {
-      console.log("Processing TenderCreated event:", data);
+      console.log("Processing OfferCreated event:", data);
 
       this.validateData(data);
 
       const user = await this.findUserById(data.userId);
 
-      const userTenders = user.tenders || [];
+      const userOffers = user.offers || [];
 
-      const tenderIndex = userTenders.findIndex((tender) => tender.toString() === data.id);
+      const OfferIndex = userOffers.findIndex((offer) => offer.toString() === data.id);
 
-      if (tenderIndex === -1) {
+      if (OfferIndex === -1) {
         // Example logic: Save user to database
         console.log(`Saving user to local database: ID=${data.id}, userId=${data.userId}`);
 
-        userTenders.push(new Schema.Types.ObjectId(data.id));
-        user.tenders = userTenders;
+        userOffers.push(new Schema.Types.ObjectId(data.id));
+        user.offers = userOffers;
         await user.save();
       }
     } catch (err) {
@@ -29,24 +29,24 @@ export class EntTenderEvents {
     }
   }
 
-  static async processTenderDeleted(data: { id: string; userId: string }) {
+  static async processOfferDeleted(data: { id: string; userId: string }) {
     try {
-      console.log("Processing TenderDeleted event:", data);
+      console.log("Processing OfferDeleted event:", data);
 
       this.validateData(data);
 
       const user = await this.findUserById(data.userId);
 
-      const userTenders = user.tenders || [];
+      const userOffers = user.offers || [];
 
-      const tenderIndex = userTenders.findIndex((tender) => tender.toString() === data.id);
+      const offerIndex = userOffers.findIndex((offer) => offer.toString() === data.id);
 
-      if (tenderIndex !== -1) {
+      if (offerIndex !== -1) {
         // Example logic: Remove user from database
         console.log(`Removing user from local database: ID=${data.id}, userId=${data.userId}`);
 
-        userTenders.splice(tenderIndex, 1);
-        user.tenders = userTenders;
+        userOffers.splice(offerIndex, 1);
+        user.offers = userOffers;
         await user.save();
       }
     } catch (err) {
@@ -57,7 +57,7 @@ export class EntTenderEvents {
 
   private static validateData(data: { id: string; userId: string }) {
     if (!data.id || !isValidObjectId(data.id)) {
-      throw new ValidationError("Invalid user data: tenderId is required");
+      throw new ValidationError("Invalid user data: OfferId is required");
     }
 
     if (!data.userId || !isValidObjectId(data.userId)) {
