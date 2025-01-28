@@ -3,4 +3,5 @@ import { IUser } from "../entities";
 
 export interface IUserRepository {
   create(user: Pick<SignupParams, "email" | "role" | "companyName" | "companyId" | "licenceNum">): Promise<IUser>;
+  findById(id: string): Promise<IUser | null>;
 }

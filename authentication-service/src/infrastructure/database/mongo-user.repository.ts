@@ -4,6 +4,9 @@ import { IUserRepository } from "../../domain/repositories";
 import { User } from "../orm";
 
 export class MongoUserRepository implements IUserRepository {
+  async findById(id: string): Promise<IUser | null> {
+    return await User.findById(id);
+  }
   async create(
     user: Pick<SignupParams, "email" | "role" | "companyName" | "companyId" | "licenceNum">
   ): Promise<IUser> {

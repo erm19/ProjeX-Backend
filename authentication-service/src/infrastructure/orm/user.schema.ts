@@ -16,6 +16,8 @@ const UserSchema = new Schema<IUser>({
   },
   licenseNum: { type: String },
   companyNum: { type: String },
+  tenders: [{ type: Schema.Types.ObjectId }],
+  offers: [{ type: Schema.Types.ObjectId }],
 });
 
 UserSchema.path("licenseNum").validate(function (value) {
