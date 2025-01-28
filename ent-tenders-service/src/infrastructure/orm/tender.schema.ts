@@ -37,7 +37,7 @@ const TenderSchema = new Schema<ITender>({
 
 TenderSchema.post("save", async (tender) => {
   const user = await User.findOne({ _id: tender.creator }, { tenders: true });
-  user?.tenders.push(tender._id as Types.ObjectId);
+  user?.entTenders.push(tender._id as Types.ObjectId);
   await user?.save();
 });
 

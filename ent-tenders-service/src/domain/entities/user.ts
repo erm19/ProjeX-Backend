@@ -2,5 +2,5 @@ import { Document, Types } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
-  tenders: Types.ObjectId[];
+  entTenders: Types.ObjectId[];
 }
