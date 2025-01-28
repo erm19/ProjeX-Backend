@@ -1,29 +1,17 @@
-import { NotFoundError, ValidationError } from "@urbanix/error-handling";
+import { ValidationError } from "@urbanix/error-handling";
 import { MongoUserRepository } from "../../infrastructure/database";
-import { isValidObjectId, Schema, Types } from "mongoose";
+import { isValidObjectId } from "mongoose";
+import { UserEntTenderService } from "../services/user-ent-tender.service";
 
 export class EntTenderEvents {
-  private static _userRepo = new MongoUserRepository();
+  private static _userTenders = new UserEntTenderService(new MongoUserRepository());
   static async processTenderCreated(data: { id: string; userId: string }) {
     try {
       console.log("Processing TenderCreated event:", data);
 
       this.validateData(data);
 
-      const user = await this.findUserById(data.userId);
-
-      const userTenders = user.entTenders || [];
-
-      const tenderIndex = userTenders.findIndex((tender) => tender.toString() === data.id);
-
-      if (tenderIndex === -1) {
-        // Example logic: Save user to database
-        console.log(`Saving user to local database: ID=${data.id}, userId=${data.userId}`);
-
-        userTenders.push(new Schema.Types.ObjectId(data.id));
-        user.entTenders = userTenders;
-        await user.save();
-      }
+      await this._userTenders.handleTenderCreatedEvent(data.id, data.userId);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -35,20 +23,7 @@ export class EntTenderEvents {
 
       this.validateData(data);
 
-      const user = await this.findUserById(data.userId);
-
-      const userTenders = user.entTenders || [];
-
-      const tenderIndex = userTenders.findIndex((tender) => tender.toString() === data.id);
-
-      if (tenderIndex !== -1) {
-        // Example logic: Remove user from database
-        console.log(`Removing user from local database: ID=${data.id}, userId=${data.userId}`);
-
-        userTenders.splice(tenderIndex, 1);
-        user.entTenders = userTenders;
-        await user.save();
-      }
+      await this._userTenders.handleTenderDeletedEvent(data.id, data.userId);
     } catch (err) {
       // Re-throw error for retry or DLQ handling
       throw err;
@@ -63,15 +38,5 @@ export class EntTenderEvents {
     if (!data.userId || !isValidObjectId(data.userId)) {
       throw new ValidationError("Invalid user data: userId is required");
     }
-  }
-
-  private static async findUserById(userId: string) {
-    const user = await this._userRepo.findById(userId);
-
-    if (!user) {
-      throw new NotFoundError(`User not found: ${userId}`);
-    }
-
-    return user;
   }
 }

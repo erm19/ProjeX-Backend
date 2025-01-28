@@ -1,3 +1,4 @@
+import { Schema } from "mongoose";
 import { SignupParams } from "../../core/types";
 import { IUser } from "../../domain/entities";
 import { IUserRepository } from "../../domain/repositories";
@@ -12,5 +13,15 @@ export class MongoUserRepository implements IUserRepository {
   ): Promise<IUser> {
     const newUser = new User(user);
     return newUser.save();
+  }
+
+  async updateTenders(user: IUser, tenders: Schema.Types.ObjectId[]): Promise<void> {
+    user.entTenders = tenders;
+    await user.save();
+  }
+
+  async updateOffers(user: IUser, offers: Schema.Types.ObjectId[]): Promise<void> {
+    user.entOffers = offers;
+    await user.save();
   }
 }
