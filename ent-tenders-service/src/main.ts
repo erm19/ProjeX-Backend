@@ -3,6 +3,7 @@ import cors from "cors";
 import { connectDB, MongoTenderRepository, MongoUserRepository } from "./infrastructure/database";
 import { entTendersRouter } from "./api/routes";
 import { errorHandler } from "@urbanix/error-handling";
+import { initializeEventHandlers } from "./infrastructure/messages/event-handlers";
 
 export const userRepo = new MongoUserRepository();
 export const tenderRepo = new MongoTenderRepository();
@@ -12,6 +13,12 @@ async function startService() {
 
   const app = express();
   const PORT = process.env.PORT || 3002;
+
+  try {
+    await initializeEventHandlers();
+  } catch (error) {
+    console.log(error);
+  }
 
   app.use(express.json());
   app.use(cors());
