@@ -17,10 +17,4 @@ const OfferSchema = new Schema<IOffer>(
   { collection: "ent-offers", timestamps: true }
 );
 
-OfferSchema.post("save", async (offer) => {
-  const user = await User.findOne({ _id: offer.creator }, { entOffers: true });
-  user?.entOffers.push(offer._id as Types.ObjectId);
-  await user?.save();
-});
-
 export const EntOffer = model<IOffer>("EntOffer", OfferSchema);
