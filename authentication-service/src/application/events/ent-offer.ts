@@ -1,6 +1,6 @@
 import { isValidObjectId, Schema } from "mongoose";
 import { MongoUserRepository } from "../../infrastructure/database";
-import { NotFoundError, ValidationError } from "@urbanix/error-handling";
+import { ValidationError } from "@urbanix/error-handling";
 import { UserEntOfferService } from "../services/user-ent-offer.service";
 
 export class EntOfferEvents {
