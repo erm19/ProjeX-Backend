@@ -48,6 +48,7 @@ export async function consumeEvents(
       }
     });
   } catch (error) {
+    console.log("error in consuming events", error);
     throw new InternalServerError(`Failed to consume events from queue: ${queueName}`);
   }
 }
