@@ -20,7 +20,11 @@ export async function getRabbitMQConnection(url: string): Promise<Connection> {
 export async function createRabbitMQChannel(url: string): Promise<Channel> {
   try {
     const connection = await getRabbitMQConnection(url);
-    return await connection.createChannel();
+    const channel = await connection.createChannel();
+    if (typeof channel.assertQueue !== "function") {
+      throw new InternalServerError("Invalid RabbitMQ channel");
+    }
+    return channel;
   } catch (error) {
     throw new InternalServerError("Failed to create RabbitMQ channel");
   }
