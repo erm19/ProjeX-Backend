@@ -9,7 +9,7 @@ const QuestionnaireSchema = new Schema<IQuestionnaire>({
 
 const OfferSchema = new Schema<IOffer>(
   {
-    tenderId: { type: Schema.Types.ObjectId, required: true },
+    tenderId: { type: Schema.Types.ObjectId, ref: "EntTender", required: true },
     creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
     questionnaire: [QuestionnaireSchema],
     files: [{ type: String }],
