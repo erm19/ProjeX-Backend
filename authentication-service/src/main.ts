@@ -11,7 +11,11 @@ async function startService() {
   const app = express();
   const PORT = process.env.PORT || 3001;
 
-  await initializeEventHandlers();
+  try {
+    await initializeEventHandlers();
+  } catch (error) {
+    console.error("Error initializing event handlers", error);
+  }
 
   app.use(express.json());
   app.use(cors());
