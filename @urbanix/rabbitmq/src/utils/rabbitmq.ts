@@ -26,6 +26,7 @@ export async function createRabbitMQChannel(url: string): Promise<Channel> {
     }
     return channel;
   } catch (error) {
+    console.log(error);
     throw new InternalServerError("Failed to create RabbitMQ channel");
   }
 }
