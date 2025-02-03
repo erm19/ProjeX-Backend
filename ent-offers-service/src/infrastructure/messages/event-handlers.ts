@@ -9,29 +9,39 @@ export async function initializeEventHandlers() {
     retryDelayMs: 2000,
     maxRetries: 3,
     dlqName: "tender_created_dlq",
+    exchange: "tender_exchange",
+    routingKey: "ent_tender_created",
   });
 
   await consumeEvents(channel, "ent_tender_deleted", TenderEvents.processTenderDeleted, {
     retryDelayMs: 2000,
     maxRetries: 3,
     dlqName: "tender_deleted_dlq",
+    exchange: "tender_exchange",
+    routingKey: "ent_tender_deleted",
   });
 
   await consumeEvents(channel, "user_created", UserEvents.processUserCreated, {
     retryDelayMs: 2000,
     maxRetries: 3,
     dlqName: "user_created_dlq",
+    exchange: "user_exchange",
+    routingKey: "user_created",
   });
 
   await consumeEvents(channel, "user_deleted", UserEvents.processUserDeleted, {
     retryDelayMs: 2000,
     maxRetries: 3,
     dlqName: "user_deleted_dlq",
+    exchange: "user_exchange",
+    routingKey: "user_deleted",
   });
 
   await consumeEvents(channel, "user_offers_updated", UserEvents.processUserUpdated, {
     retryDelayMs: 2000,
     maxRetries: 3,
     dlqName: "user_offers_updated_dlq",
+    exchange: "user_exchange",
+    routingKey: "user_offers_updated",
   });
 }
