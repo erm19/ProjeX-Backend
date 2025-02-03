@@ -4,6 +4,7 @@ import { connectDB, MongoTenderRepository, MongoUserRepository } from "./infrast
 import { entTendersRouter } from "./api/routes";
 import { errorHandler } from "@urbanix/error-handling";
 import { initializeEventHandlers } from "./infrastructure/messages/event-handlers";
+import { set } from "mongoose";
 
 export const userRepo = new MongoUserRepository();
 export const tenderRepo = new MongoTenderRepository();
@@ -18,6 +19,9 @@ async function startService() {
     await initializeEventHandlers();
   } catch (error) {
     console.log(error);
+    setTimeout(async () => {
+      await initializeEventHandlers();
+    }, 5000);
   }
 
   app.use(express.json());
