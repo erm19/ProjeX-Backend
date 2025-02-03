@@ -5,12 +5,17 @@ export async function consumeEvents(
   channel: Channel,
   queueName: string,
   handleEvent: (data: any) => Promise<void>,
-  options: { retryDelayMs?: number; maxRetries?: number; dlqName?: string } = {}
+  options: { retryDelayMs?: number; maxRetries?: number; dlqName?: string; exchange?: string; routingKey?: string } = {}
 ) {
-  const { retryDelayMs = 1000, maxRetries = 5, dlqName } = options;
+  const { retryDelayMs = 1000, maxRetries = 5, dlqName, exchange, routingKey } = options;
 
   try {
     await channel.assertQueue(queueName, { durable: true });
+
+    if (exchange && routingKey) {
+      await channel.assertExchange(exchange, "direct", { durable: true });
+      await channel.bindQueue(queueName, exchange, routingKey);
+    }
 
     if (dlqName) {
       await channel.assertQueue(dlqName, { durable: true });
