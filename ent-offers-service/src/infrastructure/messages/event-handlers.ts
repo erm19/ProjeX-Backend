@@ -1,47 +1,59 @@
-import { consumeEvents } from "@urbanix/rabbitmq";
+import { consumeEvents, ExchangeTypes } from "@urbanix/rabbitmq";
 import { rabbitmqChannel } from "../providers";
 import { TenderEvents, UserEvents } from "../../application/events";
 
 export async function initializeEventHandlers() {
   const channel = await rabbitmqChannel();
+  const exchanges = { tender: "tender_exchange", user: "user_exchange" } as const;
+  const getQueueName = (name: string) => `ent_offers.${name}`;
 
-  await consumeEvents(channel, "ent_tender_created", TenderEvents.processTenderCreated, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "tender_created_dlq",
-    exchange: "tender_exchange",
-    routingKey: "ent_tender_created",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("tender_created"),
+    exchanges.tender,
+    ExchangeTypes.topic,
+    TenderEvents.processTenderCreated,
+    "*.created",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("tender_created_dlq") }
+  );
 
-  await consumeEvents(channel, "ent_tender_deleted", TenderEvents.processTenderDeleted, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "tender_deleted_dlq",
-    exchange: "tender_exchange",
-    routingKey: "ent_tender_deleted",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("tender_deleted"),
+    exchanges.tender,
+    ExchangeTypes.topic,
+    TenderEvents.processTenderDeleted,
+    "*.deleted",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("tender_deleted_dlq") }
+  );
 
-  await consumeEvents(channel, "user_created", UserEvents.processUserCreated, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "user_created_dlq",
-    exchange: "user_exchange",
-    routingKey: "user_created",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("user_created"),
+    exchanges.user,
+    ExchangeTypes.topic,
+    UserEvents.processUserCreated,
+    "*.created",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("user_created_dlq") }
+  );
 
-  await consumeEvents(channel, "user_deleted", UserEvents.processUserDeleted, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "user_deleted_dlq",
-    exchange: "user_exchange",
-    routingKey: "user_deleted",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("user_deleted"),
+    exchanges.user,
+    ExchangeTypes.topic,
+    UserEvents.processUserDeleted,
+    "*.deleted",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("user_deleted_dlq") }
+  );
 
-  await consumeEvents(channel, "user_offers_updated", UserEvents.processUserUpdated, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "user_offers_updated_dlq",
-    exchange: "user_exchange",
-    routingKey: "user_offers_updated",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("offers_updated"),
+    exchanges.user,
+    ExchangeTypes.topic,
+    UserEvents.processUserUpdated,
+    "*.offers.updated",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("user_offers_updated_dlq") }
+  );
 }
