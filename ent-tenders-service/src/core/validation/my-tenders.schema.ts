@@ -4,14 +4,10 @@ import { isValidObjectId } from "mongoose";
 
 export const myTendersSchema = baseListSchema
   .keys({
-    "x-username": Joi.string()
-      .trim()
-      .custom((value, helpers) => {
-        if (value && !isValidObjectId(value)) return helpers.message({ custom: "Invalid user Id" });
-        return value;
-      })
-      .messages({
-        custom: "Invalid user Id",
-      }),
+    "x-username": Joi.string().trim().email().required().messages({
+      "string.email": "Email must be a valid email",
+      "string.empty": "Email cannot be empty",
+      "any.required": "Email is required",
+    }),
   })
   .unknown();

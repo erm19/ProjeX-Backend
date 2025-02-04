@@ -37,15 +37,11 @@ export const createTenderSchema = Joi.object({
     "string.empty": "Title cannot be empty",
     "any.required": "Title is required",
   }),
-  "x-username": Joi.string()
-    .trim()
-    .custom((value, helpers) => {
-      if (value && !isValidObjectId(value)) return helpers.message({ custom: "Invalid user Id" });
-      return value;
-    })
-    .messages({
-      custom: "Invalid user Id",
-    }),
+  "x-username": Joi.string().trim().email().required().messages({
+    "string.email": "Email must be a valid email",
+    "string.empty": "Email cannot be empty",
+    "any.required": "Email is required",
+  }),
   type: Joi.string().trim().required().messages({
     "string.empty": "Type cannot be empty",
     "any.required": "Type is required",

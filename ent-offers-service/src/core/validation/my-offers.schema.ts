@@ -4,15 +4,10 @@ import { baseListSchema } from "./base-list.schema";
 
 export const myOffersSchema = baseListSchema
   .keys({
-    "x-username": Joi.string()
-      .trim()
-      .required()
-      .custom((value, helpers) => {
-        if (!isValidObjectId(value)) return helpers.message({ custom: "Invalid user ID" });
-        return value;
-      })
-      .messages({
-        custom: "Invalid user ID",
-      }),
+    "x-username": Joi.string().trim().email().required().messages({
+      "string.email": "Email must be a valid email",
+      "string.empty": "Email cannot be empty",
+      "any.required": "Email is required",
+    }),
   })
   .unknown();

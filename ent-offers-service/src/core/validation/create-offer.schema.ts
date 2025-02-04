@@ -28,16 +28,11 @@ export const createOfferSchema = Joi.object({
     .messages({
       custom: "Invalid tender ID",
     }),
-  "x-username": Joi.string()
-    .trim()
-    .required()
-    .custom((value, helpers) => {
-      if (!isValidObjectId(value)) return helpers.message({ custom: "Invalid user ID" });
-      return value;
-    })
-    .messages({
-      custom: "Invalid user ID",
-    }),
+  "x-username": Joi.string().trim().email().required().messages({
+    "string.email": "Email must be a valid email",
+    "string.empty": "Email cannot be empty",
+    "any.required": "Email is required",
+  }),
   questionnaire: Joi.array().items(questionnaireSchema).min(1).required().messages({
     "array.min": "At least one questionnaire item is required",
     "any.required": "Questionnaire is required",
