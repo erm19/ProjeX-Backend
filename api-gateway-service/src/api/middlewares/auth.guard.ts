@@ -15,7 +15,6 @@ export const authGuard = async (req: Request, res: Response, next: NextFunction)
   try {
     const data = await authHttpClient("verify", HttpMethod.GET, { data: {}, headers: { authorization: token } });
     req.headers["x-username"] = data.username;
-    console.log(data.username);
     next();
   } catch (error: any) {
     const status = error.status || 503;
