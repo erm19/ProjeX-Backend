@@ -1,6 +1,6 @@
 {
   "name": "@urbanix/rabbitmq",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Shared package for RabbitMQ connection and event handling logic",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

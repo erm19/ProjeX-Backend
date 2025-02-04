@@ -14,7 +14,7 @@ export async function consumeEvents(
   const { retryDelayMs = 1000, maxRetries = 5, dlqName } = options;
 
   try {
-    await channel.assertExchange(exchange, "direct", { durable: true });
+    await channel.assertExchange(exchange, exchangeType, { durable: true });
     await channel.assertQueue(queueName, { durable: true });
     await channel.bindQueue(queueName, exchange, routingKey);
 
