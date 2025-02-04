@@ -10,6 +10,7 @@ export class MongoTenderRepository implements ITenderRepository {
       title: tender.title,
       type: tender.tenderType,
       creator: tender.username,
+      endDate: tender.endDate,
       private: tender.isPrivate,
       hasInspector: tender.hasInspector,
       city: tender.city,
