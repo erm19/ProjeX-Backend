@@ -1,14 +1,10 @@
 import { CreateTender } from "../../core/types";
-import { CreateTenderService } from "../../domain/services";
+import { TenderService } from "../services";
 
 export class CreateTenderUseCase {
-  private _createTender: CreateTenderService;
-
-  constructor(createTenderService: CreateTenderService) {
-    this._createTender = createTenderService;
-  }
+  constructor(private _tenders: TenderService) {}
 
   async execute(tender: CreateTender) {
-    return await this._createTender.execute(tender);
+    return await this._tenders.createTender(tender);
   }
 }

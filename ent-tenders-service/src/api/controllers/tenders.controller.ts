@@ -1,12 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { CreateTenderUseCase, GetTenderUseCase, ListTendersUseCase } from "../../application/use-cases";
 import { CreateTenderService, ListTendersService } from "../../domain/services";
-import { tenderRepo, userRepo } from "../../main";
 import { isValidObjectId } from "mongoose";
 import { convertUnknownToError, ValidationError } from "@urbanix/error-handling";
+import { MongoUserRepository, MongoTenderRepository } from "../../infrastructure/database";
+import { TenderService } from "../../application/services";
 
-const createTenderService = new CreateTenderService(userRepo, tenderRepo);
-const createTenderUseCase = new CreateTenderUseCase(createTenderService);
+const userRepo = new MongoUserRepository();
+const tenderRepo = new MongoTenderRepository();
+
+const createTenderUseCase = new CreateTenderUseCase(
+  new TenderService(new CreateTenderService(userRepo, tenderRepo), tenderRepo)
+);
 const getTenderUseCase = new GetTenderUseCase(tenderRepo);
 const listTendersService = new ListTendersService(tenderRepo);
 const listTendersUseCase = new ListTendersUseCase(listTendersService);
