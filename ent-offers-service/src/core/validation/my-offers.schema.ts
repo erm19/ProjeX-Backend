@@ -8,8 +8,11 @@ export const myOffersSchema = baseListSchema
       .trim()
       .required()
       .custom((value, helpers) => {
-        if (!isValidObjectId(value)) return helpers.message({ message: "Invalid user ID" });
+        if (!isValidObjectId(value)) return helpers.message({ custom: "Invalid user ID" });
         return value;
+      })
+      .messages({
+        custom: "Invalid user ID",
       }),
   })
   .unknown();

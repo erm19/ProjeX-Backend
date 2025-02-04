@@ -8,8 +8,11 @@ export const listByTenderSchema = baseListSchema
       .trim()
       .required()
       .custom((value, helpers) => {
-        if (!isValidObjectId(value)) return helpers.message({ message: "Invalid tender ID" });
+        if (!isValidObjectId(value)) return helpers.message({ custom: "Invalid tender ID" });
         return value;
+      })
+      .messages({
+        custom: "Invalid tender ID",
       }),
   })
   .unknown();
