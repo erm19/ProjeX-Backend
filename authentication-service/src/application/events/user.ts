@@ -1,4 +1,4 @@
-import { publishEvent } from "@urbanix/rabbitmq";
+import { ExchangeTypes, publishEvent } from "@urbanix/rabbitmq";
 import { IUser } from "../../domain/entities";
 import { rabbitmqChannel } from "../../infrastructure/providers";
 
@@ -7,25 +7,23 @@ export class UserEvents {
     await publishEvent(
       await rabbitmqChannel(),
       "user_exchange",
-      "user_created",
+      ExchangeTypes.topic,
       { id: user._id, email: user.email },
-      5,
-      500
+      "user.created"
     );
   }
 
   static async onUserDeleted(user: IUser) {
-    await publishEvent(await rabbitmqChannel(), "user_exchange", "user_deleted", { id: user._id }, 5, 500);
+    await publishEvent(await rabbitmqChannel(), "user_exchange", ExchangeTypes.topic, { id: user._id }, "user.deleted");
   }
 
   static async onUserTendersUpdated(user: IUser) {
     await publishEvent(
       await rabbitmqChannel(),
       "user_exchange",
-      "user_tenders_updated",
+      ExchangeTypes.topic,
       { id: user._id, tenders: user.entTenders },
-      5,
-      500
+      "user.tenders.updated"
     );
   }
 
@@ -33,10 +31,9 @@ export class UserEvents {
     await publishEvent(
       await rabbitmqChannel(),
       "user_exchange",
-      "user_offers_updated",
+      ExchangeTypes.topic,
       { id: user._id, offers: user.entOffers },
-      5,
-      500
+      "user.offers.updated"
     );
   }
 }

@@ -9,9 +9,9 @@ export class EntOfferEvents {
     try {
       console.log("Processing OfferCreated event:", data);
 
-      this.validateData(data);
+      EntOfferEvents.validateData(data);
 
-      await this._userEntOffers.handleOfferCreatedEvent(data.id, data.userId);
+      await EntOfferEvents._userEntOffers.handleOfferCreatedEvent(data.id, data.userId);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -21,9 +21,9 @@ export class EntOfferEvents {
     try {
       console.log("Processing OfferDeleted event:", data);
 
-      this.validateData(data);
+      EntOfferEvents.validateData(data);
 
-      await this._userEntOffers.handleOfferDeletedEvent(data.id, data.userId);
+      await EntOfferEvents._userEntOffers.handleOfferDeletedEvent(data.id, data.userId);
     } catch (err) {
       // Re-throw error for retry or DLQ handling
       throw err;

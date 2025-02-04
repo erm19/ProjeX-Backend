@@ -9,9 +9,9 @@ export class EntTenderEvents {
     try {
       console.log("Processing TenderCreated event:", data);
 
-      this.validateData(data);
+      EntTenderEvents.validateData(data);
 
-      await this._userTenders.handleTenderCreatedEvent(data.id, data.userId);
+      await EntTenderEvents._userTenders.handleTenderCreatedEvent(data.id, data.userId);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -21,9 +21,9 @@ export class EntTenderEvents {
     try {
       console.log("Processing TenderDeleted event:", data);
 
-      this.validateData(data);
+      EntTenderEvents.validateData(data);
 
-      await this._userTenders.handleTenderDeletedEvent(data.id, data.userId);
+      await EntTenderEvents._userTenders.handleTenderDeletedEvent(data.id, data.userId);
     } catch (err) {
       // Re-throw error for retry or DLQ handling
       throw err;
