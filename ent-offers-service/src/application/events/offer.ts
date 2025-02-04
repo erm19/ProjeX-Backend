@@ -8,7 +8,7 @@ export class OfferEvent {
       await rabbitmqChannel(),
       "offer_exchange",
       ExchangeTypes.topic,
-      { id: offer._id },
+      { id: offer._id, tenderId: offer.tenderId, userId: offer.creator },
       "ent-offer.created"
     );
   }
@@ -18,7 +18,7 @@ export class OfferEvent {
       await rabbitmqChannel(),
       "offer_exchange",
       ExchangeTypes.topic,
-      { id: offer._id },
+      { id: offer._id, tenderId: offer.tenderId, userId: offer.creator },
       "ent-offer.deleted"
     );
   }
