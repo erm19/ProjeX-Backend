@@ -9,9 +9,9 @@ export class TenderEvents {
     console.log("Processing TenderCreated event:", data);
 
     try {
-      this.validateData(data);
+      TenderEvents.validateData(data);
 
-      await this._tenderService.handleCreatedEvent(data);
+      await TenderEvents._tenderService.handleCreatedEvent(data);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -21,9 +21,9 @@ export class TenderEvents {
     console.log("Processing TenderDeleted event:", data);
 
     try {
-      this.validateData(data);
+      TenderEvents.validateData(data);
 
-      await this._tenderService.handleDeletedEvent(data);
+      await TenderEvents._tenderService.handleDeletedEvent(data);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }

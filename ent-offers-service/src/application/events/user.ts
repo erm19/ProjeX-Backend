@@ -7,10 +7,10 @@ export class UserEvents {
   static async processUserCreated(data: { id: string; email: string }) {
     console.log("Processing UserCreated event:", data);
     try {
-      this.validateId(data);
+      UserEvents.validateId(data);
 
       // Save user to database
-      this._userService.handleCreatedEvent(data.id, data.email);
+      UserEvents._userService.handleCreatedEvent(data.id, data.email);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -19,10 +19,10 @@ export class UserEvents {
   static async processUserUpdated(data: { id: string; tenders: Schema.Types.ObjectId[] }) {
     console.log("Processing UserUpdated event:", data);
     try {
-      this.validateId(data);
+      UserEvents.validateId(data);
 
       // Update user in database
-      this._userService.handleUpdatedEvent(data.id, data.tenders);
+      UserEvents._userService.handleUpdatedEvent(data.id, data.tenders);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
@@ -31,10 +31,10 @@ export class UserEvents {
   static async processUserDeleted(data: { id: string }) {
     console.log("Processing UserDeleted event:", data);
     try {
-      this.validateId(data);
+      UserEvents.validateId(data);
 
       // Delete user from database
-      this._userService.handleDeletedEvent(data.id);
+      UserEvents._userService.handleDeletedEvent(data.id);
     } catch (err) {
       throw err; // Re-throw error for retry or DLQ handling
     }
