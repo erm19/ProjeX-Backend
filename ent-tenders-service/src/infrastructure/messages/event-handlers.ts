@@ -15,11 +15,7 @@ export async function initializeEventHandlers() {
     ExchangeTypes.topic,
     UserEvents.processUserCreated,
     "*.created",
-    {
-      retryDelayMs: 2000,
-      maxRetries: 3,
-      dlqName: getQueueName("user_created_dlq"),
-    }
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("user_created_dlq") }
   );
 
   await consumeEvents(
@@ -29,11 +25,7 @@ export async function initializeEventHandlers() {
     ExchangeTypes.topic,
     UserEvents.processUserUpdated,
     "*.tenders.updated",
-    {
-      retryDelayMs: 2000,
-      maxRetries: 3,
-      dlqName: getQueueName("user_tenders_updated_dlq"),
-    }
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("user_tenders_updated_dlq") }
   );
 
   await consumeEvents(
@@ -43,11 +35,7 @@ export async function initializeEventHandlers() {
     ExchangeTypes.topic,
     UserEvents.processUserDeleted,
     "*.deleted",
-    {
-      retryDelayMs: 2000,
-      maxRetries: 3,
-      dlqName: getQueueName("user_deleted_dlq"),
-    }
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("user_deleted_dlq") }
   );
 
   await consumeEvents(
@@ -57,11 +45,7 @@ export async function initializeEventHandlers() {
     ExchangeTypes.topic,
     OfferEvents.processOfferCreated,
     "*.created",
-    {
-      retryDelayMs: 2000,
-      maxRetries: 3,
-      dlqName: getQueueName("offer_created_dlq"),
-    }
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("offer_created_dlq") }
   );
 
   await consumeEvents(
@@ -71,11 +55,7 @@ export async function initializeEventHandlers() {
     ExchangeTypes.topic,
     OfferEvents.processOfferDeleted,
     "*.deleted",
-    {
-      retryDelayMs: 2000,
-      maxRetries: 3,
-      dlqName: getQueueName("offer_deleted_dlq"),
-    }
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: getQueueName("offer_deleted_dlq") }
   );
 
   console.log("Event handlers initialized");
