@@ -1,30 +1,49 @@
-import { consumeEvents } from "@urbanix/rabbitmq";
+import { consumeEvents, ExchangeTypes } from "@urbanix/rabbitmq";
 import { EntOfferEvents, EntTenderEvents } from "../../application/events";
 import { rabbitmqChannel } from "../providers";
 
 export async function initializeEventHandlers() {
   const channel = await rabbitmqChannel();
-  await consumeEvents(channel, "ent_tender_created", EntTenderEvents.processTenderCreated, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "tender_created_dlq",
-  });
+  const exchanges = { tender: "tender_exchange", offer: "offer_exchange" } as const;
+  const getQueueName = (name: string) => `users.${name}`;
 
-  await consumeEvents(channel, "ent_tender_deleted", EntTenderEvents.processTenderDeleted, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "tender_deleted_dlq",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("ent_tender_created"),
+    exchanges.tender,
+    ExchangeTypes.topic,
+    EntTenderEvents.processTenderCreated,
+    "*.created",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: "tender_created_dlq" }
+  );
 
-  await consumeEvents(channel, "ent_offer_created", EntOfferEvents.processOfferCreated, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "offer_created_dlq",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("ent_tender_deleted"),
+    exchanges.tender,
+    ExchangeTypes.topic,
+    EntTenderEvents.processTenderDeleted,
+    "*.deleted",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: "tender_deleted_dlq" }
+  );
 
-  await consumeEvents(channel, "ent_offer_deleted", EntOfferEvents.processOfferDeleted, {
-    retryDelayMs: 2000,
-    maxRetries: 3,
-    dlqName: "offer_deleted_dlq",
-  });
+  await consumeEvents(
+    channel,
+    getQueueName("ent_offer_created"),
+    exchanges.offer,
+    ExchangeTypes.topic,
+    EntOfferEvents.processOfferCreated,
+    "*.created",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: "offer_created_dlq" }
+  );
+
+  await consumeEvents(
+    channel,
+    getQueueName("ent_offer_deleted"),
+    exchanges.offer,
+    ExchangeTypes.topic,
+    EntOfferEvents.processOfferDeleted,
+    "*.deleted",
+    { retryDelayMs: 2000, maxRetries: 3, dlqName: "offer_deleted_dlq" }
+  );
 }
