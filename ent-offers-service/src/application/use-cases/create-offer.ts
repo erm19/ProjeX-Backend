@@ -1,14 +1,11 @@
 import { IQuestionnaire } from "../../domain/entities";
 import { CreateOfferService } from "../../domain/services";
+import { OfferService } from "../services";
 
 export class CreateOfferUseCase {
-  private _createOffer: CreateOfferService;
-
-  constructor(createOfferService: CreateOfferService) {
-    this._createOffer = createOfferService;
-  }
+  constructor(private _offer: OfferService) {}
 
   async execute(tenderId: string, username: string, questionnaire: IQuestionnaire[]) {
-    return await this._createOffer.execute(tenderId, username, questionnaire);
+    return await this._offer.create(tenderId, username, questionnaire);
   }
 }

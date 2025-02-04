@@ -4,16 +4,18 @@ import { CreateOfferService, ListByRefService } from "../../domain/services";
 import { CreateOfferUseCase, OffersByCreatorUseCase, OffersByTenderUseCase } from "../../application/use-cases";
 import { IQuestionnaire } from "../../domain/entities";
 import { convertUnknownToError } from "@urbanix/error-handling";
+import { OfferService } from "../../application/services";
 
 const offerRepository = new MongoOfferRepository();
 const userRepository = new MongoUserRepository();
 
 const listByRefService = new ListByRefService(offerRepository);
 const createOfferServcie = new CreateOfferService(userRepository, offerRepository);
+const offerService = new OfferService(offerRepository, createOfferServcie);
 
 const offersByTenderUseCase = new OffersByTenderUseCase(listByRefService);
 const offersByCreatorUseCase = new OffersByCreatorUseCase(listByRefService);
-const createOfferUseCase = new CreateOfferUseCase(createOfferServcie);
+const createOfferUseCase = new CreateOfferUseCase(offerService);
 
 export class OffersController {
   static async listByTender(req: Request, res: Response, next: NextFunction) {

@@ -15,6 +15,10 @@ export class MongoOfferRepository implements IOfferRepository {
       .limit(limit + 1);
   }
 
+  async findById(id: string): Promise<IOffer | null> {
+    return await EntOffer.findById(id);
+  }
+
   async deleteById(id: string): Promise<void> {
     await EntOffer.deleteOne({ _id: id });
   }
