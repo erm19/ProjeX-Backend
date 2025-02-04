@@ -13,6 +13,7 @@ export const createHttpClient =
       });
       return res.data;
     } catch (err: any) {
+      console.log(err);
       throwErrorByStatus(err.status, err.response.data.data);
     }
   };

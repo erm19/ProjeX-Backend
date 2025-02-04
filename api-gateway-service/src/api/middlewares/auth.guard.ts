@@ -2,7 +2,7 @@ import { createHttpClient } from "../../core/utils";
 import { NextFunction, Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
 
-const authHttpClient = createHttpClient(`http://${process.env.AUTH_ADDRESS}`);
+const authHttpClient = createHttpClient(`${process.env.AUTH_ADDRESS}`);
 
 export const authGuard = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization;
@@ -13,8 +13,9 @@ export const authGuard = async (req: Request, res: Response, next: NextFunction)
   }
 
   try {
-    const data = await authHttpClient("verify", HttpMethod.POST, { data: req.body, headers: { Authorization: token } });
+    const data = await authHttpClient("verify", HttpMethod.GET, { data: {}, headers: { authorization: token } });
     req.headers["x-username"] = data.username;
+    console.log(data.username);
     next();
   } catch (error: any) {
     const status = error.status || 503;
