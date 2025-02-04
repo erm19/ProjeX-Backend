@@ -1,12 +1,30 @@
 services:
+  rabbitmq:
+    image: "rabbitmq:3.13.7-management"
+    container_name: "rabbitmq"
+    restart: always
+    ports:
+      - "5672:5672"  # AMQP protocol port
+      - "15672:15672"  # Management UI (should be secured in production)
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - backend-dev
+
   api-gateway-service:
     build:
       context: ./api-gateway-service
       target: development
     ports:
       - "3000:3000"
-    volumes:
-      - ./api-gateway-service:/api-gateway-service
+    # volumes:
+    #   - ./api-gateway-service:/api-gateway-service
     env_file:
       - ./api-gateway-service/.env
     environment:
@@ -14,6 +32,15 @@ services:
       ENT_TENDER_ADDRESS: http://ent-tenders-service:3002
       ENT_OFFERS_ADDRESS: http://ent-offers-service:3003
     command: npm run dev
+    networks:
+      - backend-dev
+    develop:
+      watch:
+        - action: sync
+          path: ./api-gateway-service/src
+          target: /api-gateway-service/src
+        - action: rebuild
+          path: ./api-gateway-service/package*.json
 
   authentication-service:
     build:
@@ -21,11 +48,25 @@ services:
       target: development
     ports:
       - "3001:3001"
-    volumes:
-      - ./authentication-service:/authentication-service
+    # volumes:
+    #   - ./authentication-service:/authentication-service
     env_file:
       - ./authentication-service/.env
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     command: npm run dev
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend-dev
+    develop:
+      watch:
+        - action: sync
+          path: ./authentication-service/src
+          target: /authentication-service/src
+        - action: rebuild
+          path: ./authentication-service/package*.json
 
   ent-tenders-service:
     build:
@@ -33,11 +74,25 @@ services:
       target: development
     ports:
       - "3002:3002"
-    volumes:
-      - ./ent-tenders-service:/ent-tenders-service
+    # volumes:
+    #   - ./ent-tenders-service:/ent-tenders-service
     env_file:
       - ./ent-tenders-service/.env
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     command: npm run dev
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend-dev
+    develop:
+      watch:
+        - action: sync
+          path: ./ent-tenders-service/src
+          target: /ent-tenders-service/src
+        - action: rebuild
+          path: ./ent-tenders-service/package*.json
 
   ent-offers-service:
     build:
@@ -45,8 +100,26 @@ services:
       target: development
     ports:
       - "3003:3003"
-    volumes:
-      - ./ent-offers-service:/ent-offers-service
+    # volumes:
+    #   - ./ent-offers-service:/ent-offers-service
     env_file:
       - ./ent-offers-service/.env
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672
     command: npm run dev
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend-dev
+    develop:
+      watch:
+        - action: sync
+          path: ./ent-offers-service/src
+          target: /ent-offers-service/src
+        - action: rebuild
+          path: ./ent-offers-service/package*.json
+
+networks:
+  backend-dev:
+    driver: bridge
