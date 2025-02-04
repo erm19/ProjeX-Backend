@@ -1,25 +1,22 @@
 import { Channel } from "amqplib";
 import { InternalServerError } from "@urbanix/error-handling";
+import { Exchanges } from "./utils/types";
 
 export async function consumeEvents(
   channel: Channel,
   queueName: string,
+  exchange: string,
+  exchangeType: Exchanges,
   handleEvent: (data: any) => Promise<void>,
-  options: { retryDelayMs?: number; maxRetries?: number; dlqName?: string; exchange?: string; routingKey?: string } = {}
+  routingKey = "",
+  options: { retryDelayMs?: number; maxRetries?: number; dlqName?: string } = {}
 ) {
-  const { retryDelayMs = 1000, maxRetries = 5, dlqName, exchange, routingKey } = options;
+  const { retryDelayMs = 1000, maxRetries = 5, dlqName } = options;
 
   try {
+    await channel.assertExchange(exchange, "direct", { durable: true });
     await channel.assertQueue(queueName, { durable: true });
-
-    if (exchange && routingKey) {
-      await channel.assertExchange(exchange, "direct", { durable: true });
-      await channel.bindQueue(queueName, exchange, routingKey);
-    }
-
-    if (dlqName) {
-      await channel.assertQueue(dlqName, { durable: true });
-    }
+    await channel.bindQueue(queueName, exchange, routingKey);
 
     console.log(`Waiting for messages in queue: ${queueName}`);
 
@@ -44,6 +41,7 @@ export async function consumeEvents(
               headers: { "x-retry-count": retryCount },
             });
           } else if (dlqName) {
+            await channel.assertQueue(dlqName, { durable: true });
             console.log(`Sending message to DLQ: ${dlqName} after ${maxRetries} failed attempts`);
             channel.sendToQueue(dlqName, message.content, { persistent: true });
           }

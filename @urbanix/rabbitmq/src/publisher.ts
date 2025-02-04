@@ -1,22 +1,26 @@
 import { InternalServerError } from "@urbanix/error-handling";
 import { Channel } from "amqplib";
+import { Exchanges } from "./utils/types";
 
 export async function publishEvent(
   channel: Channel,
   exchange: string,
-  routingKey: string,
+  exchangeType: Exchanges,
   data: any,
+  routingKey: string = "",
   maxRetries = 5,
   delayMs = 1000
 ) {
   let retries = 0;
   while (retries < maxRetries) {
     try {
-      await channel.assertExchange(exchange, "direct", { durable: true });
+      await channel.assertExchange(exchange, exchangeType, { durable: true });
       const success = channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(data)), { persistent: true });
       if (!success) throw new InternalServerError("Failed to publish message");
 
-      console.log(`Message published to ${exchange} with routingKey: ${routingKey}`);
+      console.log(
+        `Message published to ${exchange}, type: ${exchangeType} ${routingKey ? `with routingKey: ${routingKey}` : ""}`
+      );
       return;
     } catch (error) {
       console.error(`Publish attempt ${retries + 1} failed:`, error);
