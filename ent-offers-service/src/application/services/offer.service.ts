@@ -1,15 +1,23 @@
 import { NotFoundError, ValidationError } from "@urbanix/error-handling";
+import { Types } from "mongoose";
+import { RefTypes } from "../../core/types";
 import { IQuestionnaire } from "../../domain/entities";
-import { IOfferRepository, ITenderRepository } from "../../domain/repositories";
-import { CreateOfferService } from "../../domain/services";
+import { IOfferRepository, ITenderRepository, IUserRepository } from "../../domain/repositories";
+import { CreateOfferService, ListByRefService } from "../../domain/services";
 import { OfferEvent } from "../events";
 
 export class OfferService {
+  private _createOffer: CreateOfferService;
+  private _listByRef: ListByRefService;
+
   constructor(
     private _offerRepo: IOfferRepository,
-    private _createOffer: CreateOfferService,
-    private _tenderRepo: ITenderRepository
-  ) {}
+    private _tenderRepo: ITenderRepository,
+    private _userRepo: IUserRepository
+  ) {
+    this._createOffer = new CreateOfferService(this._userRepo, this._offerRepo);
+    this._listByRef = new ListByRefService(this._offerRepo);
+  }
   async create(tenderId: string, username: string, questionnaire: IQuestionnaire[]) {
     const tender = await this._tenderRepo.getById(tenderId);
 
@@ -36,6 +44,18 @@ export class OfferService {
     await this._offerRepo.deleteById(id);
 
     await OfferEvent.onOfferDeleted(offer);
+  }
+
+  async getUserOffers(creator: string, limit: number, lastId?: string) {
+    const user = await this._userRepo.findByEmail(creator);
+
+    if (!user) throw new NotFoundError("User Not Found");
+
+    return await this._listByRef.execute(RefTypes.Creator, (user._id as Types.ObjectId).toString(), limit, lastId);
+  }
+
+  async getTenderOffers(tenderId: string, limit: number, lastId?: string) {
+    return await this._listByRef.execute(RefTypes.Tender, tenderId, limit, lastId);
   }
 
   private matchingQuestionnaire(tenderQuestionnaire: string[], offerQuestionnaire: string[]): boolean {

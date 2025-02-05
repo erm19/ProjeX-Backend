@@ -1,14 +1,9 @@
-import { RefTypes } from "../../core/types";
-import { ListByRefService } from "../../domain/services";
+import { OfferService } from "../services";
 
 export class OffersByTenderUseCase {
-  private _listByRef: ListByRefService;
-
-  constructor(listByRefService: ListByRefService) {
-    this._listByRef = listByRefService;
-  }
+  constructor(private _offers: OfferService) {}
 
   async execute(tenderId: string, limit: number, lastId?: string) {
-    return await this._listByRef.execute(RefTypes.Tender, tenderId, limit, lastId);
+    return await this._offers.getTenderOffers(tenderId, limit, lastId);
   }
 }

@@ -1,14 +1,9 @@
-import { RefTypes } from "../../core/types";
-import { ListByRefService } from "../../domain/services";
+import { OfferService } from "../services";
 
 export class OffersByCreatorUseCase {
-  private _listByRef: ListByRefService;
-
-  constructor(listByRefService: ListByRefService) {
-    this._listByRef = listByRefService;
-  }
+  constructor(private _offers: OfferService) {}
 
   async execute(creatorId: string, limit: number, lastId?: string) {
-    return await this._listByRef.execute(RefTypes.Creator, creatorId, limit, lastId);
+    return await this._offers.getUserOffers(creatorId, limit, lastId);
   }
 }

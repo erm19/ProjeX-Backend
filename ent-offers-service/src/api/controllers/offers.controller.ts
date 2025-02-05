@@ -3,19 +3,17 @@ import { NextFunction, Request, Response } from "express";
 import { OfferService } from "../../application/services";
 import { CreateOfferUseCase, OffersByCreatorUseCase, OffersByTenderUseCase } from "../../application/use-cases";
 import { IQuestionnaire } from "../../domain/entities";
-import { CreateOfferService, ListByRefService } from "../../domain/services";
 import { MongoOfferRepository, MongoUserRepository } from "../../infrastructure/database";
 import { MongoTenderRepository } from "../../infrastructure/database/mongo-tender.repository";
 
-const offerRepository = new MongoOfferRepository();
-const userRepository = new MongoUserRepository();
+const offerService = new OfferService(
+  new MongoOfferRepository(),
+  new MongoTenderRepository(),
+  new MongoUserRepository()
+);
 
-const listByRefService = new ListByRefService(offerRepository);
-const createOfferService = new CreateOfferService(userRepository, offerRepository);
-const offerService = new OfferService(offerRepository, createOfferService, new MongoTenderRepository());
-
-const offersByTenderUseCase = new OffersByTenderUseCase(listByRefService);
-const offersByCreatorUseCase = new OffersByCreatorUseCase(listByRefService);
+const offersByTenderUseCase = new OffersByTenderUseCase(offerService);
+const offersByCreatorUseCase = new OffersByCreatorUseCase(offerService);
 const createOfferUseCase = new CreateOfferUseCase(offerService);
 
 export class OffersController {
