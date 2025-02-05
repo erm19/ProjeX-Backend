@@ -1,9 +1,10 @@
 import { Schema, model } from "mongoose";
-import { IQuestionnaire, IOffer } from "../../domain/entities";
+import { IOffer, IQuestionnaire } from "../../domain/entities";
 
 const QuestionnaireSchema = new Schema<IQuestionnaire>({
   questionId: { type: Schema.Types.ObjectId, required: true },
   answer: { type: Schema.Types.Mixed, required: true },
+  remark: { type: String },
 });
 
 const OfferSchema = new Schema<IOffer>(

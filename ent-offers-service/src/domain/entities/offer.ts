@@ -3,6 +3,7 @@ import { Document, Types } from "mongoose";
 export interface IQuestionnaire {
   questionId: Types.ObjectId;
   answer: number | boolean | string;
+  remark?: string;
 }
 
 export interface IOffer extends Document {
