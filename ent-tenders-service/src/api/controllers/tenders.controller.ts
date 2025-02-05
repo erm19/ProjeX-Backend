@@ -48,7 +48,7 @@ export class TendersController {
 
   static async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const newTender = createTenderUseCase.execute({
+      const newTender = await createTenderUseCase.execute({
         title: req.body.title || "",
         username: (req.headers["x-username"] as string) || "",
         tenderType: req.body.type || "",
@@ -61,6 +61,7 @@ export class TendersController {
       });
       res.status(201).json({ message: "Tender created successfully", tender: newTender });
     } catch (error) {
+      console.log(error);
       next(convertUnknownToError(error));
     }
   }

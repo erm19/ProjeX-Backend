@@ -1,6 +1,6 @@
 import { NotFoundError } from "@urbanix/error-handling";
 import { UserEvents } from "../events/user";
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IUserRepository } from "../../domain/repositories";
 
 export class UserEntOfferService {
@@ -21,7 +21,7 @@ export class UserEntOfferService {
       // Example logic: Save user to database
       console.log(`Saving user to local database: ID=${offerId}, userId=${userId}`);
 
-      userOffers.push(new Schema.Types.ObjectId(offerId));
+      userOffers.push(new mongoose.Types.ObjectId(offerId) as unknown as Schema.Types.ObjectId);
       await this._userRepo.updateOffers(user, userOffers);
     }
 

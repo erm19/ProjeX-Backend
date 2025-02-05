@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { ITenderRepository } from "../../domain/repositories";
 import { NotFoundError } from "@urbanix/error-handling";
 
@@ -20,7 +20,7 @@ export class OfferService {
       // Example logic: Save user to database
       console.log(`Saving user to local database: ID=${offerId}, tenderId=${tenderId}`);
 
-      offers.push(new Schema.Types.ObjectId(offerId));
+      offers.push(new mongoose.Types.ObjectId(offerId) as unknown as Schema.Types.ObjectId);
       await this._tenderRepo.updateOffers(tenderId, offers);
     }
 
