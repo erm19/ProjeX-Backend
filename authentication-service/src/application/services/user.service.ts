@@ -78,6 +78,6 @@ export class UserService {
       isAuthorized = roles.some((role) => role === user.role);
     }
 
-    return isAuthorized;
+    return { username, isAuthorized };
   }
 }

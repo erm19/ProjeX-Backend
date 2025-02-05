@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { myOffersController, tenderOffersController, createOfferController } from "../../controllers";
+import { createOfferController, myOffersController, tenderOffersController } from "../../controllers";
 import { authGuard } from "../../middlewares";
 
 export const entOffersRouter = Router();
 
-entOffersRouter.get("/my-offers", authGuard, myOffersController);
+entOffersRouter.get("/my-offers", authGuard("entrepreneur"), myOffersController);
 
-entOffersRouter.get("/:tenderId", authGuard, tenderOffersController);
+entOffersRouter.get("/:tenderId", authGuard("entrepreneur"), tenderOffersController);
 
-entOffersRouter.post("/:tenderId/offer", authGuard, createOfferController);
+entOffersRouter.post("/:tenderId/offer", authGuard("entrepreneur"), createOfferController);

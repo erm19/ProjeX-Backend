@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  tenderListController,
   createTenderController,
-  tenderDetailsController,
   myTendersController,
+  tenderDetailsController,
+  tenderListController,
 } from "../../controllers";
 import { authGuard } from "../../middlewares";
 
@@ -11,8 +11,8 @@ export const entTendersRouter = Router();
 
 entTendersRouter.get("/list", tenderListController);
 
-entTendersRouter.post("/tender", authGuard, createTenderController);
+entTendersRouter.post("/tender", authGuard("lawyer"), createTenderController);
 
-entTendersRouter.get("/tender/:tenderId", authGuard, tenderDetailsController);
+entTendersRouter.get("/tender/:tenderId", authGuard(["lawyer", "entrepreneur"]), tenderDetailsController);
 
-entTendersRouter.get("/my-tenders", authGuard, myTendersController);
+entTendersRouter.get("/my-tenders", authGuard("lawyer"), myTendersController);

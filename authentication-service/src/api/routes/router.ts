@@ -1,8 +1,8 @@
 import { Router } from "express";
+import { authoriztionSchema, loginSchema, refreshTokenSchema, SignupSchema } from "../../core/validation";
+import { tokenSchema } from "../../core/validation/token.schema";
 import { AuthController } from "../controllers";
 import { validate, validateTokenGuard } from "../middlewares";
-import { loginSchema, refreshTokenSchema, SignupSchema } from "../../core/validation";
-import { tokenSchema } from "../../core/validation/token.schema";
 
 export const authRouter = Router();
 
@@ -19,3 +19,5 @@ authRouter.get("/logout", validate(tokenSchema), validateTokenGuard, AuthControl
 authRouter.post("/refresh", validate(refreshTokenSchema), validateTokenGuard, AuthController.refresh);
 
 authRouter.get("/verify", validate(tokenSchema), AuthController.verify);
+
+authRouter.post("/authorization", validate(authoriztionSchema), AuthController.authorization);

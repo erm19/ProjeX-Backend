@@ -6,7 +6,7 @@ import {
   RefreshTokenUseCase,
   VerifyTokenUseCase,
 } from "../../application/use-cases";
-import { signupUser, userService } from "../../core/constants";
+import { signupUser, userAuthorization, userService } from "../../core/constants";
 import { generateSecretHash } from "../../core/utils";
 
 export class AuthController {
@@ -96,6 +96,18 @@ export class AuthController {
       const username = await VerifyTokenUseCase.execute(token, userService);
 
       res.json({ username: username });
+    } catch (error) {
+      convertUnknownToError(error);
+    }
+  }
+
+  static async authorization(req: Request, res: Response, next: NextFunction) {
+    const { roles } = req.body;
+
+    try {
+      const data = await userAuthorization.execute(req.headers.authorization?.split(" ")[1] || "", roles);
+
+      res.json({ ...data });
     } catch (error) {
       convertUnknownToError(error);
     }
