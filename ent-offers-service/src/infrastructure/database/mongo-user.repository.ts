@@ -9,7 +9,7 @@ export class MongoUserRepository implements IUserRepository {
   }
 
   async create(id: string, email: string): Promise<IUser> {
-    return await User.create({ id, email });
+    return await User.create({ _id: id, email });
   }
 
   async update(id: string, offers: Schema.Types.ObjectId[]): Promise<IUser | null> {

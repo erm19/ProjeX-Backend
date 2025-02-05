@@ -38,7 +38,7 @@ export class OffersController {
       const offer = await createOfferUseCase.execute(
         req.body.tenderId as string,
         req.headers["x-username"] as string,
-        req.body.questionnare as IQuestionnaire[]
+        req.body.questionnaire as IQuestionnaire[]
       );
 
       res.status(201).json({ message: "Offer created successfully", offer });
