@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { CreateTender } from "../../core/types";
 import { ITenderRepository, IUserRepository } from "../../domain/repositories";
 import { CreateTenderService, ListTendersService } from "../../domain/services";
@@ -17,8 +18,9 @@ export class TenderService {
 
   async createTender(data: CreateTender) {
     const tender = await this._createTender.execute(data);
+    const questionnaire = tender.questionnaire.map((question) => (question._id as mongoose.Types.ObjectId).toString());
 
-    await TenderEvents.onTenderCreated({ id: tender.id, userId: tender.creator.toString() });
+    await TenderEvents.onTenderCreated({ id: tender.id, userId: tender.creator.toString(), questionnaire });
 
     return tender;
   }

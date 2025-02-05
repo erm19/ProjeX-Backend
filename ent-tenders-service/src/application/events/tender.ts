@@ -2,13 +2,13 @@ import { ExchangeTypes, publishEvent } from "@urbanix/rabbitmq";
 import { rabbitmqChannel } from "../../infrastructure/providers";
 
 export class TenderEvents {
-  static async onTenderCreated(data: { id: string; userId: string }) {
+  static async onTenderCreated(data: { id: string; userId: string; questionnaire: string[] }) {
     try {
       await publishEvent(
         await rabbitmqChannel(),
         "tender_exchange",
         ExchangeTypes.topic,
-        { id: data.id, userId: data.userId },
+        { id: data.id, userId: data.userId, questionnaire: data.questionnaire },
         "tender.created"
       );
     } catch (err) {
