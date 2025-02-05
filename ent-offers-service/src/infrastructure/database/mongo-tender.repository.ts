@@ -11,4 +11,8 @@ export class MongoTenderRepository implements ITenderRepository {
   async delete(id: string): Promise<void> {
     await EntTender.deleteOne({ _id: id });
   }
+
+  async getById(id: string): Promise<ITender | null> {
+    return await EntTender.findById(id);
+  }
 }

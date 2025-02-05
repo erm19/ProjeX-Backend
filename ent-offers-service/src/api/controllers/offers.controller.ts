@@ -1,17 +1,18 @@
+import { convertUnknownToError } from "@urbanix/error-handling";
 import { NextFunction, Request, Response } from "express";
-import { MongoOfferRepository, MongoUserRepository } from "../../infrastructure/database";
-import { CreateOfferService, ListByRefService } from "../../domain/services";
+import { OfferService } from "../../application/services";
 import { CreateOfferUseCase, OffersByCreatorUseCase, OffersByTenderUseCase } from "../../application/use-cases";
 import { IQuestionnaire } from "../../domain/entities";
-import { convertUnknownToError } from "@urbanix/error-handling";
-import { OfferService } from "../../application/services";
+import { CreateOfferService, ListByRefService } from "../../domain/services";
+import { MongoOfferRepository, MongoUserRepository } from "../../infrastructure/database";
+import { MongoTenderRepository } from "../../infrastructure/database/mongo-tender.repository";
 
 const offerRepository = new MongoOfferRepository();
 const userRepository = new MongoUserRepository();
 
 const listByRefService = new ListByRefService(offerRepository);
-const createOfferServcie = new CreateOfferService(userRepository, offerRepository);
-const offerService = new OfferService(offerRepository, createOfferServcie);
+const createOfferService = new CreateOfferService(userRepository, offerRepository);
+const offerService = new OfferService(offerRepository, createOfferService, new MongoTenderRepository());
 
 const offersByTenderUseCase = new OffersByTenderUseCase(listByRefService);
 const offersByCreatorUseCase = new OffersByCreatorUseCase(listByRefService);
