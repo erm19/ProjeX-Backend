@@ -1,6 +1,5 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { IQuestionnaire, IOffer } from "../../domain/entities";
-import { User } from "./user.schema";
 
 const QuestionnaireSchema = new Schema<IQuestionnaire>({
   questionId: { type: Schema.Types.ObjectId, required: true },
