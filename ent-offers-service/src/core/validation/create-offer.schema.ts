@@ -8,13 +8,11 @@ const questionnaireSchema = Joi.object({
     .custom((value, helpers) => {
       if (!isValidObjectId(value)) return helpers.message({ custom: "Invalid question ID" });
       return value;
-    })
-    .messages({
-      custom: "Invalid question ID",
     }),
   answer: Joi.alternatives().try(Joi.string(), Joi.boolean(), Joi.number()).required().messages({
     "any.required": "Answer is required",
   }),
+  remark: Joi.string().optional(),
 });
 
 export const createOfferSchema = Joi.object({
@@ -24,9 +22,6 @@ export const createOfferSchema = Joi.object({
     .custom((value, helpers) => {
       if (!isValidObjectId(value)) return helpers.message({ custom: "Invalid tender ID" });
       return value;
-    })
-    .messages({
-      custom: "Invalid tender ID",
     }),
   "x-username": Joi.string().trim().email().required().messages({
     "string.email": "Email must be a valid email",
