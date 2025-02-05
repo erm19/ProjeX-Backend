@@ -5,7 +5,7 @@ import { TenderService } from "../services";
 export class TenderEvents {
   private static _tenderService = new TenderService(new MongoTenderRepository(), new MongoOfferRepository());
 
-  static async processTenderCreated(data: { tenderId: string }) {
+  static async processTenderCreated(data: { id: string }) {
     console.log("Processing TenderCreated event:", data);
 
     try {
@@ -17,7 +17,7 @@ export class TenderEvents {
     }
   }
 
-  static async processTenderDeleted(data: { tenderId: string }) {
+  static async processTenderDeleted(data: { id: string }) {
     console.log("Processing TenderDeleted event:", data);
 
     try {
@@ -29,9 +29,9 @@ export class TenderEvents {
     }
   }
 
-  private static validateData(data: { tenderId: string }) {
-    if (!data.tenderId) {
-      throw new Error("Invalid tender data: tenderId is required");
+  private static validateData(data: { id: string }) {
+    if (!data.id) {
+      throw new Error("Invalid tender data: id is required");
     }
   }
 }
