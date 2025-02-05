@@ -9,10 +9,10 @@ export class TenderService {
     this._offerRepo = offerRepository;
   }
 
-  async handleCreatedEvent(data: { id: string }) {
+  async handleCreatedEvent(data: { id: string; questionnaire: string[] }) {
     console.log(`Saving tender to database: ID=${data.id}`);
 
-    await this._tenderRepo.create(data.id);
+    await this._tenderRepo.create(data.id, data.questionnaire);
 
     console.log(`Tender ${data.id} created`);
   }

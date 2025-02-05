@@ -1,5 +1,5 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export interface ITender extends Document {
-  title: string;
+  questionnaire: Types.ObjectId[];
 }

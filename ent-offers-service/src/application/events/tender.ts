@@ -5,7 +5,7 @@ import { TenderService } from "../services";
 export class TenderEvents {
   private static _tenderService = new TenderService(new MongoTenderRepository(), new MongoOfferRepository());
 
-  static async processTenderCreated(data: { id: string }) {
+  static async processTenderCreated(data: { id: string; questionnaire: string[] }) {
     console.log("Processing TenderCreated event:", data);
 
     try {

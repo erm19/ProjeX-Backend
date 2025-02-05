@@ -3,8 +3,8 @@ import { ITenderRepository } from "../../domain/repositories";
 import { EntTender } from "../orm";
 
 export class MongoTenderRepository implements ITenderRepository {
-  async create(id: string, title?: string): Promise<ITender> {
-    const tender = new EntTender({ _id: id, title: title });
+  async create(id: string, questionnaire: string[]): Promise<ITender> {
+    const tender = new EntTender({ _id: id, questionnaire });
     return await tender.save();
   }
 

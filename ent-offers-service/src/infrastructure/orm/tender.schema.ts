@@ -3,7 +3,7 @@ import { ITender } from "../../domain/entities";
 
 const TenderSchema = new Schema<ITender>(
   {
-    title: { type: String },
+    questionnaire: [{ type: Schema.Types.ObjectId }],
   },
   { collection: "tenders" }
 );
