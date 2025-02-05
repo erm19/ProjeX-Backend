@@ -1,17 +1,13 @@
+import { convertUnknownToError, InternalServerError, ValidationError } from "@urbanix/error-handling";
 import { NextFunction, Request, Response } from "express";
 import {
   LoginUserUseCase,
   LogoutUserUseCase,
   RefreshTokenUseCase,
-  SignupUserUseCase,
   VerifyTokenUseCase,
 } from "../../application/use-cases";
-import { MongoUserRepository } from "../../infrastructure/database";
+import { signupUser, userService } from "../../core/constants";
 import { generateSecretHash } from "../../core/utils";
-import { convertUnknownToError, InternalServerError, ValidationError } from "@urbanix/error-handling";
-
-const userRepository = new MongoUserRepository();
-const signupUser = new SignupUserUseCase(userRepository);
 
 export class AuthController {
   static async signup(req: Request, res: Response, next: NextFunction) {
@@ -43,12 +39,15 @@ export class AuthController {
     const CLIENT_ID = process.env.AWS_APP_CLIENT_ID || "";
 
     try {
-      const response = await LoginUserUseCase.execute({
-        username: req.body.email,
-        password: req.body.password,
-        clientId: CLIENT_ID,
-        secretHash: generateSecretHash(req.body.email, CLIENT_SECRET, CLIENT_ID),
-      });
+      const response = await LoginUserUseCase.execute(
+        {
+          username: req.body.email,
+          password: req.body.password,
+          clientId: CLIENT_ID,
+          secretHash: generateSecretHash(req.body.email, CLIENT_SECRET, CLIENT_ID),
+        },
+        userService
+      );
 
       res.json(response);
     } catch (error) {
@@ -58,7 +57,7 @@ export class AuthController {
 
   static async logout(req: Request, res: Response, next: NextFunction) {
     try {
-      await LogoutUserUseCase.execute(req.headers.authorization?.split(" ")[1] || "");
+      await LogoutUserUseCase.execute(req.headers.authorization?.split(" ")[1] || "", userService);
       res.send(true);
     } catch (error) {
       next(new InternalServerError("Failed to logout user"));
@@ -70,11 +69,14 @@ export class AuthController {
     const CLIENT_ID = process.env.AWS_APP_CLIENT_ID || "";
 
     try {
-      const response = await RefreshTokenUseCase.execute({
-        clientId: CLIENT_ID,
-        refreshToken: req.body.refreshToken,
-        secretHash: generateSecretHash(req.body.username, CLIENT_SECRET, CLIENT_ID),
-      });
+      const response = await RefreshTokenUseCase.execute(
+        {
+          clientId: CLIENT_ID,
+          refreshToken: req.body.refreshToken,
+          secretHash: generateSecretHash(req.body.username, CLIENT_SECRET, CLIENT_ID),
+        },
+        userService
+      );
 
       res.json(response);
     } catch (error) {
@@ -91,7 +93,7 @@ export class AuthController {
     }
 
     try {
-      const username = await VerifyTokenUseCase.execute(token);
+      const username = await VerifyTokenUseCase.execute(token, userService);
 
       res.json({ username: username });
     } catch (error) {

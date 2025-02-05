@@ -1,7 +1,7 @@
-import { AwsCognitoProvider } from "../../infrastructure/providers";
+import { UserService } from "../services";
 
 export class LogoutUserUseCase {
-  static async execute(token: string) {
-    return await AwsCognitoProvider.logout(token);
+  static async execute(token: string, userService: UserService) {
+    return await userService.logout(token);
   }
 }

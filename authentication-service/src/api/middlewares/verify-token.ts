@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { VerifyTokenUseCase } from "../../application/use-cases";
+import { userService } from "../../core/constants";
 
 export const validateTokenGuard = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -10,7 +11,7 @@ export const validateTokenGuard = async (req: Request, res: Response, next: Next
   }
 
   try {
-    req.body.username = await VerifyTokenUseCase.execute(token);
+    req.body.username = await VerifyTokenUseCase.execute(token, userService);
     next(); // Token is valid, proceed to the next middleware
   } catch (error) {
     res.status(401).json({ message: "Token invalid" });

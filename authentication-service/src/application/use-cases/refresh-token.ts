@@ -1,10 +1,8 @@
-import { AwsCognitoProvider } from "../../infrastructure/providers";
 import { RefreshParams } from "../../core/types";
+import { UserService } from "../services";
 
 export class RefreshTokenUseCase {
-  static async execute(params: RefreshParams) {
-    const authResponse = await AwsCognitoProvider.refresh(params);
-
-    return { accessToken: authResponse.AccessToken, idToken: authResponse.IdToken };
+  static async execute(params: RefreshParams, userService: UserService) {
+    return await userService.refresh(params);
   }
 }

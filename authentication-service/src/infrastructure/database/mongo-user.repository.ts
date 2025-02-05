@@ -8,6 +8,7 @@ export class MongoUserRepository implements IUserRepository {
   async findById(id: string): Promise<IUser | null> {
     return await User.findById(id);
   }
+
   async create(
     user: Pick<SignupParams, "email" | "role" | "companyName" | "companyId" | "licenceNum">
   ): Promise<IUser> {
@@ -23,5 +24,9 @@ export class MongoUserRepository implements IUserRepository {
   async updateOffers(user: IUser, offers: Schema.Types.ObjectId[]): Promise<void> {
     user.entOffers = offers;
     await user.save();
+  }
+
+  async findByEmail(email: string): Promise<IUser | null> {
+    return await User.findOne({ email });
   }
 }

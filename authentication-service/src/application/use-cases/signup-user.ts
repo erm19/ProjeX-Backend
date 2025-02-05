@@ -1,16 +1,11 @@
-import { UserSignupService } from "../services";
 import { SignupParams } from "../../core/types";
-import { IUserRepository } from "../../domain/repositories";
+import { UserService } from "../services";
 
 export class SignupUserUseCase {
-  private _userSignupService: UserSignupService;
-
-  constructor(userRepository: IUserRepository) {
-    this._userSignupService = new UserSignupService(userRepository);
-  }
+  constructor(private _users: UserService) {}
 
   async execute(user: SignupParams) {
     // Leverage the application service
-    return await this._userSignupService.execute(user);
+    return await this._users.signup(user);
   }
 }
