@@ -1,6 +1,6 @@
 import { AuthorizationError, InternalServerError, ValidationError } from "@urbanix/error-handling";
-import { jwks } from "../../infrastructure/providers";
 import { decode, verify } from "jsonwebtoken";
+import { jwks } from "../../infrastructure/providers";
 
 export class VerifyTokenUseCase {
   static async execute(token: string) {
