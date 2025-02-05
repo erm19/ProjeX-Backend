@@ -3,13 +3,6 @@ import { baseListSchema } from "./base-list.schema";
 
 export const listTendersSchema = baseListSchema
   .keys({
-    cities: Joi.array()
-      .items(
-        Joi.string().required().messages({
-          "string.empty": "City cannot be empty",
-          "any.required": "City is required",
-        })
-      )
-      .optional(),
+    cities: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())).optional(),
   })
   .unknown();

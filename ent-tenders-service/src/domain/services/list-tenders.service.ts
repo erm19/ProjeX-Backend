@@ -16,7 +16,7 @@ export class ListTendersService {
     }
 
     if (lastId && isValidObjectId(lastId)) {
-      queryFilter._id = { $gt: lastId };
+      queryFilter._id = { $gte: lastId };
     }
 
     return await this._tenderRepo.list(queryFilter, limit);

@@ -5,7 +5,7 @@ export const baseListSchema = Joi.object({
   limit: Joi.string()
     .trim()
     .custom((value, helpers) => {
-      if (value && !Number.isFinite(value)) return helpers.message({ custom: "Limit must be a number" });
+      if (value && !Number.isFinite(parseInt(value))) return helpers.message({ custom: "Limit must be a number" });
       return value;
     })
     .messages({

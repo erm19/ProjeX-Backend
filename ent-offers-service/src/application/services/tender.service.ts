@@ -9,20 +9,20 @@ export class TenderService {
     this._offerRepo = offerRepository;
   }
 
-  async handleCreatedEvent(data: { tenderId: string }) {
-    console.log(`Saving tender to database: ID=${data.tenderId}`);
+  async handleCreatedEvent(data: { id: string }) {
+    console.log(`Saving tender to database: ID=${data.id}`);
 
-    await this._tenderRepo.create(data.tenderId);
+    await this._tenderRepo.create(data.id);
 
-    console.log(`Tender ${data.tenderId} created`);
+    console.log(`Tender ${data.id} created`);
   }
 
-  async handleDeletedEvent(data: { tenderId: string }) {
-    console.log(`Deleting tender from database: ID=${data.tenderId}`);
+  async handleDeletedEvent(data: { id: string }) {
+    console.log(`Deleting tender from database: ID=${data.id}`);
 
-    await this._offerRepo.deleteByTenderId(data.tenderId);
-    await this._tenderRepo.delete(data.tenderId);
+    await this._offerRepo.deleteByTenderId(data.id);
+    await this._tenderRepo.delete(data.id);
 
-    console.log(`Tender ${data.tenderId} deleted`);
+    console.log(`Tender ${data.id} deleted`);
   }
 }

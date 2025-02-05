@@ -9,12 +9,11 @@ import { TenderService } from "../../application/services";
 const userRepo = new MongoUserRepository();
 const tenderRepo = new MongoTenderRepository();
 
-const createTenderUseCase = new CreateTenderUseCase(
-  new TenderService(new CreateTenderService(userRepo, tenderRepo), tenderRepo)
-);
+const tenderService = new TenderService(userRepo, tenderRepo);
+
+const createTenderUseCase = new CreateTenderUseCase(tenderService);
 const getTenderUseCase = new GetTenderUseCase(tenderRepo);
-const listTendersService = new ListTendersService(tenderRepo);
-const listTendersUseCase = new ListTendersUseCase(listTendersService);
+const listTendersUseCase = new ListTendersUseCase(tenderService);
 
 export class TendersController {
   static async list(req: Request, res: Response, next: NextFunction) {
@@ -26,7 +25,7 @@ export class TendersController {
 
     try {
       const tenders = await listTendersUseCase.execute(citiesFilter, limit, lastId);
-      res.json({ tenders });
+      res.json({ ...tenders });
     } catch (error) {
       next(convertUnknownToError(error));
     }
@@ -34,12 +33,12 @@ export class TendersController {
 
   static async details(req: Request, res: Response, next: NextFunction) {
     const tenderId = req.params.tenderId || "";
-    if (isValidObjectId(tenderId)) {
+    if (!isValidObjectId(tenderId)) {
       throw new ValidationError("Invalid ObjectId");
     }
 
     try {
-      const tender = getTenderUseCase.execute(tenderId);
+      const tender = await getTenderUseCase.execute(tenderId);
       res.json({ tender: tender });
     } catch (error) {
       next(convertUnknownToError(error));
