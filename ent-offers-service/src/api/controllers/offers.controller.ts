@@ -21,7 +21,7 @@ export class OffersController {
     try {
       const result = await offersByTenderUseCase.execute(
         req.params.tenderId || "",
-        parseInt(req.query.limit as string),
+        parseInt(req.query.limit as string) || 20,
         req.query.lastId as string
       );
 
@@ -49,7 +49,7 @@ export class OffersController {
     try {
       const result = await offersByCreatorUseCase.execute(
         (req.headers["x-username"] || "") as string,
-        parseInt(req.query.limit as string),
+        parseInt(req.query.limit as string) || 20,
         req.query.lastId as string
       );
 
