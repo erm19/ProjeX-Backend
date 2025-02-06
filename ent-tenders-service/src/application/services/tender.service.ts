@@ -30,8 +30,8 @@ export class TenderService {
 
     if (listedTenders.length > limit) {
       return {
-        nextId: listedTenders[listedTenders.length - 2]._id,
-        tenders: listedTenders.slice(limit),
+        nextId: listedTenders[listedTenders.length - 1]._id,
+        tenders: listedTenders.slice(0, limit),
       };
     }
     return { tenders: listedTenders, nextId: null };
@@ -56,8 +56,8 @@ export class TenderService {
 
     if (listedTenders.length > limit) {
       return {
-        nextId: listedTenders[listedTenders.length - 2]._id,
-        tenders: listedTenders.slice(limit),
+        nextId: listedTenders[listedTenders.length - 1]._id,
+        tenders: listedTenders.slice(0, limit),
       };
     }
     return { tenders: listedTenders, nextId: null };

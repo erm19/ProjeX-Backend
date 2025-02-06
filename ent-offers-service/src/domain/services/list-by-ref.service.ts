@@ -1,8 +1,8 @@
-import { isValidObjectId, RootFilterQuery } from "mongoose";
-import { IOfferRepository } from "../repositories";
-import { IOffer } from "../entities";
-import { RefType, RefTypes } from "../../core/types";
 import { ValidationError } from "@urbanix/error-handling";
+import { isValidObjectId, RootFilterQuery } from "mongoose";
+import { RefType, RefTypes } from "../../core/types";
+import { IOffer } from "../entities";
+import { IOfferRepository } from "../repositories";
 
 export class ListByRefService {
   private _offerRepo: IOfferRepository;
@@ -20,12 +20,12 @@ export class ListByRefService {
 
     if (refType === RefTypes.Creator) queryFilter.creator = reference;
 
-    if (lastId && isValidObjectId(lastId)) queryFilter._id = { $gt: lastId };
+    if (lastId && isValidObjectId(lastId)) queryFilter._id = { $gte: lastId };
 
     const data = await this._offerRepo.findByQuery(queryFilter, limit);
 
     if (data.length > limit) {
-      return { nextId: data[data.length - 2]._id, data: data.slice(0, limit) };
+      return { nextId: data[data.length - 1]._id, data: data.slice(0, limit) };
     }
 
     return { nextId: null, data };

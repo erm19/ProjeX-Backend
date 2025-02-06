@@ -1,7 +1,7 @@
-import { createHttpClient } from "../../core/utils";
+import { convertUnknownToError } from "@urbanix/error-handling";
 import { NextFunction, Request, Response } from "express";
 import { HttpMethod } from "../../core/types";
-import { convertUnknownToError } from "@urbanix/error-handling";
+import { createHttpClient } from "../../core/utils";
 
 const entTendersHttpClient = createHttpClient(`${process.env.ENT_TENDER_ADDRESS}`);
 
@@ -34,4 +34,8 @@ export const tenderDetailsController = baseController(
 
 export const createTenderController = baseController(() => "tender", HttpMethod.POST);
 
-export const myTendersController = baseController(() => "my-tenders", HttpMethod.GET);
+export const myTendersController = baseController((req: Request) => {
+  const query = req.url.split("?")[1];
+  if (!query) return "my-tenders";
+  return `my-tenders?${req.url.split("?")[1]}`;
+}, HttpMethod.GET);
