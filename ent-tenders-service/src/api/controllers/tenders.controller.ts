@@ -1,10 +1,14 @@
-import { NextFunction, Request, Response } from "express";
-import { CreateTenderUseCase, GetTenderUseCase, ListTendersUseCase } from "../../application/use-cases";
-import { CreateTenderService, ListTendersService } from "../../domain/services";
-import { isValidObjectId } from "mongoose";
 import { convertUnknownToError, ValidationError } from "@urbanix/error-handling";
-import { MongoUserRepository, MongoTenderRepository } from "../../infrastructure/database";
+import { NextFunction, Request, Response } from "express";
+import { isValidObjectId } from "mongoose";
 import { TenderService } from "../../application/services";
+import {
+  CreateTenderUseCase,
+  GetTenderUseCase,
+  ListTendersUseCase,
+  MyTendersUseCase,
+} from "../../application/use-cases";
+import { MongoTenderRepository, MongoUserRepository } from "../../infrastructure/database";
 
 const userRepo = new MongoUserRepository();
 const tenderRepo = new MongoTenderRepository();
@@ -14,6 +18,7 @@ const tenderService = new TenderService(userRepo, tenderRepo);
 const createTenderUseCase = new CreateTenderUseCase(tenderService);
 const getTenderUseCase = new GetTenderUseCase(tenderRepo);
 const listTendersUseCase = new ListTendersUseCase(tenderService);
+const myTendersUseCase = new MyTendersUseCase(tenderService);
 
 export class TendersController {
   static async list(req: Request, res: Response, next: NextFunction) {
@@ -65,7 +70,17 @@ export class TendersController {
     }
   }
 
-  static async myTenders(req: Request, res: Response) {
-    res.json({ tenders: [] });
+  static async myTenders(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await myTendersUseCase.execute(
+        (req.headers["x-username"] as string) || "",
+        parseInt((req.query.limit as string) || "") || 20,
+        req.query.lastId as string
+      );
+
+      res.json({ ...result });
+    } catch (error) {
+      next(convertUnknownToError(error));
+    }
   }
 }

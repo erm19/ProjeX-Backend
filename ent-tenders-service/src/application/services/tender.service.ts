@@ -1,24 +1,24 @@
-import mongoose from "mongoose";
+import { NotFoundError } from "@urbanix/error-handling";
+import { isValidObjectId, RootFilterQuery, Types } from "mongoose";
 import { CreateTender } from "../../core/types";
+import { ITender } from "../../domain/entities";
 import { ITenderRepository, IUserRepository } from "../../domain/repositories";
 import { CreateTenderService, ListTendersService } from "../../domain/services";
 import { TenderEvents } from "../events/tender";
 
 export class TenderService {
-  private _tenderRepo: ITenderRepository;
   private _createTender: CreateTenderService;
 
   private _listTenders: ListTendersService;
 
-  constructor(userRepository: IUserRepository, tenderRepository: ITenderRepository) {
-    this._tenderRepo = tenderRepository;
-    this._createTender = new CreateTenderService(userRepository, this._tenderRepo);
+  constructor(private _userRepo: IUserRepository, private _tenderRepo: ITenderRepository) {
+    this._createTender = new CreateTenderService(this._userRepo, this._tenderRepo);
     this._listTenders = new ListTendersService(this._tenderRepo);
   }
 
   async createTender(data: CreateTender) {
     const tender = await this._createTender.execute(data);
-    const questionnaire = tender.questionnaire.map((question) => (question._id as mongoose.Types.ObjectId).toString());
+    const questionnaire = tender.questionnaire.map((question) => (question._id as Types.ObjectId).toString());
 
     await TenderEvents.onTenderCreated({ id: tender.id, userId: tender.creator.toString(), questionnaire });
 
@@ -41,5 +41,25 @@ export class TenderService {
     await this._tenderRepo.delete(tenderId);
 
     await TenderEvents.onTenderDeleted({ id: tenderId, userId });
+  }
+
+  async myTenders(username: string, limit: number, lastId?: string) {
+    const user = await this._userRepo.findByEmail(username);
+
+    if (!user) throw new NotFoundError("User Not Found");
+
+    const queryFilter: RootFilterQuery<ITender> = { creator: user._id as Types.ObjectId };
+
+    if (lastId && isValidObjectId(lastId)) queryFilter._id = { $gte: lastId };
+
+    const listedTenders = await this._tenderRepo.list(queryFilter, limit);
+
+    if (listedTenders.length > limit) {
+      return {
+        tenders: listedTenders.slice(listedTenders.length - 1),
+        lastId: listedTenders[listedTenders.length - 1]._id,
+      };
+    }
+    return { tenders: listedTenders, lastId: null };
   }
 }
