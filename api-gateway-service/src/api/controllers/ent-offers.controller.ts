@@ -20,8 +20,14 @@ const baseController =
     }
   };
 
-export const myOffersController = baseController(() => "my-offers", HttpMethod.GET);
+export const myOffersController = baseController(
+  (req: Request) => `my-offers${req.url.split("?")[1] ? `?${req.url.split("?")[1]}` : ""}`,
+  HttpMethod.GET
+);
 
-export const tenderOffersController = baseController((req: Request) => `${req.params.tenderId}/offers`, HttpMethod.GET);
+export const tenderOffersController = baseController(
+  (req: Request) => `${req.params.tenderId}/offers${req.url.split("?")[1] ? `?${req.url.split("?")[1]}` : ""}`,
+  HttpMethod.GET
+);
 
 export const createOfferController = baseController((req: Request) => `${req.params.tenderId}/offer`, HttpMethod.POST);
