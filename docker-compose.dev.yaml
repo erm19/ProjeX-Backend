@@ -23,8 +23,6 @@ services:
       target: development
     ports:
       - "3000:3000"
-    # volumes:
-    #   - ./api-gateway-service:/api-gateway-service
     env_file:
       - ./api-gateway-service/.env
     environment:
@@ -34,13 +32,6 @@ services:
     command: npm run dev
     networks:
       - backend-dev
-    develop:
-      watch:
-        - action: sync
-          path: ./api-gateway-service/src
-          target: /api-gateway-service/src
-        - action: rebuild
-          path: ./api-gateway-service/package*.json
 
   authentication-service:
     build:
@@ -48,8 +39,6 @@ services:
       target: development
     ports:
       - "3001:3001"
-    # volumes:
-    #   - ./authentication-service:/authentication-service
     env_file:
       - ./authentication-service/.env
     environment:
@@ -60,13 +49,6 @@ services:
         condition: service_healthy
     networks:
       - backend-dev
-    develop:
-      watch:
-        - action: sync
-          path: ./authentication-service/src
-          target: /authentication-service/src
-        - action: rebuild
-          path: ./authentication-service/package*.json
 
   ent-tenders-service:
     build:
@@ -74,8 +56,6 @@ services:
       target: development
     ports:
       - "3002:3002"
-    # volumes:
-    #   - ./ent-tenders-service:/ent-tenders-service
     env_file:
       - ./ent-tenders-service/.env
     environment:
@@ -86,13 +66,6 @@ services:
         condition: service_healthy
     networks:
       - backend-dev
-    develop:
-      watch:
-        - action: sync
-          path: ./ent-tenders-service/src
-          target: /ent-tenders-service/src
-        - action: rebuild
-          path: ./ent-tenders-service/package*.json
 
   ent-offers-service:
     build:
@@ -100,8 +73,6 @@ services:
       target: development
     ports:
       - "3003:3003"
-    # volumes:
-    #   - ./ent-offers-service:/ent-offers-service
     env_file:
       - ./ent-offers-service/.env
     environment:
@@ -112,13 +83,6 @@ services:
         condition: service_healthy
     networks:
       - backend-dev
-    develop:
-      watch:
-        - action: sync
-          path: ./ent-offers-service/src
-          target: /ent-offers-service/src
-        - action: rebuild
-          path: ./ent-offers-service/package*.json
 
 networks:
   backend-dev:

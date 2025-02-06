@@ -30,11 +30,11 @@ export class TenderService {
 
     if (listedTenders.length > limit) {
       return {
-        tenders: listedTenders.slice(listedTenders.length - 1),
-        lastId: listedTenders[listedTenders.length - 1]._id,
+        nextId: listedTenders[listedTenders.length - 2]._id,
+        tenders: listedTenders.slice(limit),
       };
     }
-    return { tenders: listedTenders, lastId: null };
+    return { tenders: listedTenders, nextId: null };
   }
 
   async deleteTender(tenderId: string, userId: string) {
@@ -56,10 +56,10 @@ export class TenderService {
 
     if (listedTenders.length > limit) {
       return {
-        tenders: listedTenders.slice(listedTenders.length - 1),
-        lastId: listedTenders[listedTenders.length - 1]._id,
+        nextId: listedTenders[listedTenders.length - 2]._id,
+        tenders: listedTenders.slice(limit),
       };
     }
-    return { tenders: listedTenders, lastId: null };
+    return { tenders: listedTenders, nextId: null };
   }
 }

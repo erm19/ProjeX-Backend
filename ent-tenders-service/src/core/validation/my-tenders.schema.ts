@@ -1,6 +1,5 @@
 import Joi from "joi";
 import { baseListSchema } from "./base-list.schema";
-import { isValidObjectId } from "mongoose";
 
 export const myTendersSchema = baseListSchema
   .keys({
