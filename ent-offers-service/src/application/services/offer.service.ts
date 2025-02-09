@@ -29,9 +29,10 @@ export class OfferService {
     if (!this.matchingQuestionnaire(tenderQuestionnaire, offerQuestionnaire))
       throw new ValidationError("Offer must answer tender questionnaire");
 
+    const meters = questionnaire[0].answer as number;
     const offer = await this._createOffer.execute(tenderId, username, questionnaire);
 
-    await OfferEvent.onOfferCreated(offer);
+    await OfferEvent.onOfferCreated(offer, meters);
 
     return offer;
   }

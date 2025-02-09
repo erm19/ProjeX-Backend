@@ -1,8 +1,7 @@
+import { NotFoundError } from "@urbanix/error-handling";
 import { ObjectId } from "mongoose";
 import { IQuestionnaire } from "../entities";
 import { IOfferRepository, IUserRepository } from "../repositories";
-import { NotFoundError } from "@urbanix/error-handling";
-import { OfferEvent } from "../../application/events";
 
 export class CreateOfferService {
   private _userRepo: IUserRepository;
@@ -19,7 +18,6 @@ export class CreateOfferService {
     if (!user) throw new NotFoundError("User Not Found!");
 
     const newOffer = await this._offerRepo.create(tenderId, (user._id as ObjectId).toString(), questionnaire);
-    await OfferEvent.onOfferCreated(newOffer);
 
     return newOffer;
   }

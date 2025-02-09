@@ -1,14 +1,14 @@
 import { ExchangeTypes, publishEvent } from "@urbanix/rabbitmq";
-import { rabbitmqChannel } from "../../infrastructure/providers";
 import { IOffer } from "../../domain/entities";
+import { rabbitmqChannel } from "../../infrastructure/providers";
 
 export class OfferEvent {
-  static async onOfferCreated(offer: IOffer) {
+  static async onOfferCreated(offer: IOffer, meters: number) {
     await publishEvent(
       await rabbitmqChannel(),
       "offer_exchange",
       ExchangeTypes.topic,
-      { id: offer._id, tenderId: offer.tenderId, userId: offer.creator },
+      { id: offer._id, tenderId: offer.tenderId, userId: offer.creator, offerSum: meters },
       "ent-offer.created"
     );
   }
