@@ -1,0 +1,331 @@
+openapi: 3.0.0
+info:
+  title: UrbaniX
+  description: >-
+    This documentation is used to describe all available and viable actions in
+    the UrbaniX API.
+
+
+    UrbaniX is here to make the lives of lawyers and entrepreneurs easier in the
+    urban renewal section.
+  version: 1.0.0
+servers:
+  - url: http://{{baseurl}}
+  - url: http://{{authurl}}
+  - url: http://{{enttendersurl}}
+  - url: http://{{entoffersurl}}
+components:
+  securitySchemes:
+    noauthAuth:
+      type: http
+      scheme: noauth
+tags:
+  - name: Authentication Service
+    description: >-
+      #### This service handles all of user authentication and authorization
+      requests.
+  - name: Ent-Tenders
+  - name: Ent-Offers
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Authentication Service
+      summary: Signup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: eyal8@test.com
+                password: 12345@%
+                role: lawyer
+                officeName: one
+                licenceNum: "12345709"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /login:
+    post:
+      tags:
+        - Authentication Service
+      summary: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: eyal@test.com
+                password: 12%
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/verify:
+    get:
+      tags:
+        - Authentication Service
+      summary: Verify Token
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJraWQiOiJvOG9JTUU4MlFEOFBQcCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkYWUzZDJhYy0xMGExLTcwNWQtZjE1NC01MTZjOTZlY2RmNTEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuaWwtY2VudHJhbC0xLmFtYXpvbmF3cy5jb21cL2lsLWNlbnRyYWwtMV9aRUhCWXk0TXUiLCJjbGllbnRfaWQiOiI0Z2toYWtrNTRiNmF1aDFva3M1ODlhaTFuZSIsIm9yaWdpbl9qdGkiOiIxODY2NWJhZC03OTgyLTQzNDAtOTYzMy1mMmZmNWQ2YTVlNjYiLCJldmVudF9pZCI6ImVjMzg3NzIwLWU1ZTItNGEwMi05Nzg1LTIwMzllZjY2YzU2MCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3Mzc2NjA5MjksImV4cCI6MTczNzY2NDUyOSwiaWF0IjoxNzM3NjYwOTI5LCJqdGkiOiI0ZTBiNDJjZC1hODc5LTQ0OTMtYjE4ZC1jZTE1MzgzY2RhNjMiLCJ1c2VybmFtZSI6ImV5YWw4QHRlc3QuY29tIn0.HiSvf6KDVvxyul0pPg6BKInva2oMaW0tH0O8vmouvL8dC_kZ8TGYcMkIDi_Wzwog_TmKAyNev48gQ3HUT0GHXW68UgmazU1Uk18E_cfHfNUHih8MjouizDaRx_cqZytQyUdMdpkIzeQV42dEmPYdAz7DXQRb4T7Uktb99t8xEOoHW_kbXvwYjJ1h9L6WxCqD6CGoZrsD4GW4WlZpoNBI2j52AeeqALF8y1oM3N9kV_fXeeq0SmbWRk478JxsQXkrnzhz5Gzk5ATt0wkI3czsaZXlXwiFdWmwxqamI8D3ZDY-ylZykzsreHUL1NWnGiTlUYGPoWXT9vJUNcgFvTR7OA
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication Service
+      summary: Refresh Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                refreshToken: >-
+                  eyJjdHkiOiJKV1QiLCJ3avme-q3cIZ8Z7PJ2a4ExOdR0ucNPGDmt0I3ip-hsY4FpajIgQlccpWGX_zXhnGgfIeeM4j9AcN04L0RP7DqAGbaoDpJMQ9J5Sa_kN5TTcdrFwbktSlpteQI_iZJWhkxqZ6azpNokgqHvD7yCCtnCWm74zc8ND74kXsEN_vg57tG0aQEky8Ed2mphMhBPa59g8nIfdHlk2w_B7uxgtC5hpyryQPHyKpbvkj5FaXsvDbwskma7oiOCEAhIVGmo64z14rm2a3tmzXSjziQcH_T_QHC4TEggfujtPArt5p4crz1ZCXEyFXjQNjPDQoOrzvYJg.2lu5kKbP3psANrnc.3JJ2BuRNVb9uF_UbF2sG9K1kW4gPHfaqva33ObHbj3bMnP8BV1iSRh2B_LUcMfa-HRisc8qMju3g7kAgkOoiGrtBPn-KyRrIFHZ3XAvZv0B-aqY0clEBbYEl5TqLawFPPvORUT_pWkY6jhxNCTctCpPgE61bbT_laBEo2sOSyJGcrWR5FKLtFxpqmg5WqojudW5I1viNM8OC9ToAW28db3NCyJoTXyYnYRVPV2SVVEx4wiyYwQoYQ0qU5vVscrhqE1CRC003qOkiRku3nXq-VeT39-MSZkch5j_xZq6C4T8a0zM9VP9j56Ry5FHLCfrVJ4Ev7Cton0vDHJTfhoEYsYvRYzxIdBpZ_CmwoIJMnkFqME3T_vR0PxCO7EXddZp5NYRjcWkogVr4wrwFjZ-mOpsLjfTtHIrfTV16l1QtIq6sYH7O4K3yKispOqyG2DQPeo4TLrrqA0VCYlxxllKZj1Ifoh5DxY2KxzCvR72AF35iM0crRbtSMJ1kWjg0f9TfTs3tgUlVzW0iPG5SKVgD1J5Ajt_avYBcFfMLf1luXd-fJLj2ZQ8X-wbaM3GVhLh6Zi5MiPpMLhPRV1p0CKqPx5JBWtjy-Mhc2W1Uqic8-dJKg0jE7BxqALHQjg05I3JaYjX80CK3-rbAhnc5IwIhBWmN36T6j_MVfc3JMBTXXlTiZogQ7zMsT69621nt_AH-hAUcrJjojAC5_BGWAA704GteiRURouqt_sYUc3LmAJrWrOGBaSPHqvx03wr_K-oIbs7yQjS98C-JTLfWcX_AuU7hrehJDCfboIu0UtNSBKmj2BXPIwZr_n-W-Jcf_k7kYOedQGolRDk3Nf2LNylAOL37gMqxuo7IhZ5NiRYMwG8n9MlewvMUkuc2itxxiOuQZlrwhq397ZKfdekTA1rrnK5WTSF3mb98b_I9kLMhdtsghmq8NLJ4OosV89qQ-Aq_yPW6H7clBsZl25GhXpuQ5TULCyWkko-eO1d9Y6YFJZXw_vg7rxR9xMD0kDcy-fe5-7H8r_r7OMlVTEbtyX0q4WLOkmuzeqSfgAQqHY5uyilXke962U1An4osR8ewhj6g_lVj39v5jff0uzJRjKznBk8TmMz2YeDxDJgKTGM6zpG4hNz4llDQpQmKu8zZpUxdivFi7n_kapp7T0578ZrYAHRhuZPD_AzFLExHL3nYdAmHa7ny-CfXEj9xuTLo4NFQ51_oa9mqPo0eGWAS1O0jp4kZdSJ4ft3bJKOJWCY4zXxg154mVrGb8OMxaOoJ7B1-Ojx4LjeJwKs_lQehh71gMk90FPSQBg.f28RffAdHl8T5t_JGcULMg
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJraWQiOiJvOG9JTUU4MlFEOFBJkYWUzZDJhYy0xMGExLTcwNWQtZjE1NC01MTZjOTZlY2RmNTEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuaWwtY2VudHJhbC0xLmFtYXpvbmF3cy5jb21cL2lsLWNlbnRyYWwtMV9aRUhCWXk0TXUiLCJjbGllbnRfaWQiOiI0Z2toYWtrNTRiNmF1aDFva3M1ODlhaTFuZSIsIm9yaWdpbl9qdGkiOiIxODY2NWJhZC03OTgyLTQzNDAtOTYzMy1mMmZmNWQ2YTVlNjYiLCJldmVudF9pZCI6ImVjMzg3NzIwLWU1ZTItNGEwMi05Nzg1LTIwMzllZjY2YzU2MCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3Mzc2NjA5MjksImV4cCI6MTczNzY2NDUyOSwiaWF0IjoxNzM3NjYwOTI5LCJqdGkiOiI0ZTBiNDJjZC1hODc5LTQ0OTMtYjE4ZC1jZTE1MzgzY2RhNjMiLCJ1c2VybmFtZSI6ImV5YWw4QHRlc3QuY29tIn0.HiSvf6KDVvxyul0pPg6BKInva2oMaW0tH0O8vmouvL8dC_kZ8TGYcMkIDi_Wzwog_TmKAyNev48gQ3HUT0GHXW68UgmazU1Uk18E_cfHfNUHih8MjouizDaRx_cqZytQyUdMdpkIzeQV42dEmPYdAz7DXQRb4T7Uktb99t8xEOoHW_kbXvwYjJ1h9L6WxCqD6CGoZrsD4GW4WlZpoNBI2j52AeeqALF8y1oM3N9kV_fXeeq0SmbWRk478JxsQXkrnzhz5Gzk5ATt0wkI3czsaZXlXwiFdWmwxqamI8D3ZDY-ylZykzsreHUL1NWnGiTlUYGPoWXT9vJUNcgFvTR7OA
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /auth/logout:
+    get:
+      tags:
+        - Authentication Service
+      summary: Logout
+      parameters:
+        - name: authorization
+          in: header
+          schema:
+            type: string
+          example: >-
+            Bearer
+            eyJraWQiOiJvOG9JTUU4MlFEOFBOiJkYWUzZDJhYy0xMGExLTcwNWQtZjE1NC01MTZjOTZlY2RmNTEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuaWwtY2VudHJhbC0xLmFtYXpvbmF3cy5jb21cL2lsLWNlbnRyYWwtMV9aRUhCWXk0TXUiLCJjbGllbnRfaWQiOiI0Z2toYWtrNTRiNmF1aDFva3M1ODlhaTFuZSIsIm9yaWdpbl9qdGkiOiIxODY2NWJhZC03OTgyLTQzNDAtOTYzMy1mMmZmNWQ2YTVlNjYiLCJldmVudF9pZCI6ImVjMzg3NzIwLWU1ZTItNGEwMi05Nzg1LTIwMzllZjY2YzU2MCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3Mzc2NjA5MjksImV4cCI6MTczNzY2NjExNSwiaWF0IjoxNzM3NjYyNTE1LCJqdGkiOiJjMjdiY2NkNy04MzZkLTRhNWYtYmNhZS1mOGRiMTZkMGI4ODUiLCJ1c2VybmFtZSI6ImV5YWw4QHRlc3QuY29tIn0.pYlkdyAEsiejAOxO3vneUII6QK4Ng42jCNv-yvksu1PuGiltWuvGVG03oL_HM4hsp96qmzJYR2qgU8EnURuLlTkI9-eeQkK5BASC4FxqhvMgv8salcsOu_wjA_Bo5VeRpUAvpKAkqEy6AjNXgvOxj1a4H5oZzTxTWBPR9l1mCELlyBZjevRFbvMrXjmVlET4MV_qylV3nLEewaxrklgLJoIPYOR9cJtNZFYNUvrPNYaj3xxr4geUgd-sZ7J2A9D2LVbbSslI6a17jJMH84C5JteaXhV-Cyv2zboYvVnfwmfTMF9cJpnZYAc8vDLy0c4Un_psrtAWazqQVSPodDxRBQ
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /tender:
+    post:
+      tags:
+        - Ent-Tenders
+      summary: Create Tender
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                title: This is my third tender
+                type: renewal
+                endDate: "2025-02-28T22:00:00.000Z"
+                hasInspector: false
+                private: true
+                city: Ramat Gan
+                parcels:
+                  - parcel: "1325"
+                    sections:
+                      - "1"
+                      - "2"
+                questionnaire:
+                  - question: How many meters will you add?
+                    type: number
+                  - question: Will you plant trees around the building?
+                    type: boolean
+                  - question: What is your idea to make the place more appealing?
+                    type: string
+      parameters:
+        - name: Cache-Control
+          in: header
+          schema:
+            type: string
+          example: no-cache
+        - name: Postman-Token
+          in: header
+          schema:
+            type: string
+          example: <calculated when request is sent>
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: application/json
+        - name: Content-Length
+          in: header
+          schema:
+            type: string
+          example: <calculated when request is sent>
+        - name: Host
+          in: header
+          schema:
+            type: string
+          example: <calculated when request is sent>
+        - name: User-Agent
+          in: header
+          schema:
+            type: string
+          example: PostmanRuntime/7.39.1
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          example: "*/*"
+        - name: Accept-Encoding
+          in: header
+          schema:
+            type: string
+          example: gzip, deflate, br
+        - name: Connection
+          in: header
+          schema:
+            type: string
+          example: keep-alive
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /tender/{tenderId}:
+    get:
+      tags:
+        - Ent-Tenders
+      summary: Tender Details
+      parameters:
+        - name: tenderId
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67a38b4d092c71a6e69842bf
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /list:
+    get:
+      tags:
+        - Ent-Tenders
+      summary: List Tenders
+      security:
+        - noauthAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: "2"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /my-tenders:
+    get:
+      tags:
+        - Ent-Tenders
+      summary: My Tenders
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: "1"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /{tenderId}/offer:
+    post:
+      tags:
+        - Ent-Offers
+      summary: Create Offer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                tenderId: 67a3be437838e8cd8706b52a
+                questionnaire:
+                  - questionId: 67a3be437838e8cd8706b52c
+                    answer: 23
+                  - questionId: 67a3be437838e8cd8706b52d
+                    answer: true
+                    remark: Under my conditions
+                  - questionId: 67a3be437838e8cd8706b52e
+                    answer: Go take a walk
+      parameters:
+        - name: tenderId
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67a3be437838e8cd8706b52a
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /{tenderId}:
+    get:
+      tags:
+        - Ent-Offers
+      summary: Tender Offers
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: "1"
+        - name: tenderId
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 67a3be437838e8cd8706b52a
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+  /my-offers:
+    get:
+      tags:
+        - Ent-Offers
+      summary: My Offers
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          example: "1"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
