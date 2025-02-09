@@ -13,6 +13,7 @@ const OfferSchema = new Schema<IOffer>(
     creator: { type: Schema.Types.ObjectId, ref: "User", required: true },
     questionnaire: [QuestionnaireSchema],
     files: [{ type: String }],
+    intermediateGrade: { type: Number },
   },
   { collection: "ent-offers", timestamps: true }
 );

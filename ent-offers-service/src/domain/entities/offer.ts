@@ -11,4 +11,5 @@ export interface IOffer extends Document {
   creator: Types.ObjectId;
   questionnaire: IQuestionnaire[];
   files: string[];
+  intermediateGrade: number;
 }
