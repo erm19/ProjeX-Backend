@@ -1,7 +1,7 @@
 import { InternalServerError, NotFoundError, ValidationError } from "@urbanix/error-handling";
 import { Types } from "mongoose";
 import { RefTypes } from "../../core/types";
-import { IQuestionnaire } from "../../domain/entities";
+import { IOffer, IQuestionnaire } from "../../domain/entities";
 import { IOfferRepository, ITenderRepository, IUserRepository } from "../../domain/repositories";
 import { CreateOfferService, ListByRefService } from "../../domain/services";
 import { OfferEvent } from "../events";
@@ -59,7 +59,11 @@ export class OfferService {
   }
 
   async getTenderOffers(tenderId: string, limit: number, lastId?: string) {
-    return await this._listByRef.execute(RefTypes.Tender, tenderId, limit, lastId);
+    const { nextId, data } = await this._listByRef.execute(RefTypes.Tender, tenderId, limit, lastId);
+
+    const gradedData = await this.gradeTenderOffers(tenderId, data);
+
+    return { nextId, data: gradedData };
   }
 
   private matchingQuestionnaire(tenderQuestionnaire: string[], offerQuestionnaire: string[]): boolean {
@@ -73,12 +77,12 @@ export class OfferService {
 
     const offerMeters = offers.map((offer) => offer.questionnaire[0].answer as number);
 
-    const { min, max } = this.getMinMax(offerMeters);
+    const { min, max } = this.getArrayMinMax(offerMeters);
 
     await this._tenderRepo.updateMinMax(tenderId, min, max);
   }
 
-  private getMinMax(nums: number[]) {
+  private getArrayMinMax(nums: number[]) {
     if (nums.length === 0) {
       throw new InternalServerError("Array must not be empty");
     }
@@ -95,5 +99,23 @@ export class OfferService {
     }
 
     return { min, max };
+  }
+
+  private async gradeTenderOffers(tenderId: string, offers: IOffer[]) {
+    const tender = await this._tenderRepo.getById(tenderId);
+    if (!tender) throw new NotFoundError("Tender Not Found");
+
+    const { minOffer, maxOffer } = tender;
+    if (!minOffer || !maxOffer) throw new InternalServerError("Tender should have minimum offer and maximum offer");
+    const maxMinDiff = maxOffer - minOffer;
+
+    return offers.map(({ intermediateGrade, ...offer }) => {
+      const meters = offer.questionnaire[0].answer as number;
+      const meterGrade = ((meters - minOffer) / maxMinDiff) * 0.3;
+      return {
+        ...offer,
+        grade: intermediateGrade + meterGrade,
+      } as IOffer & { grade: number };
+    });
   }
 }
