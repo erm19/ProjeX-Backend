@@ -15,4 +15,12 @@ export class MongoTenderRepository implements ITenderRepository {
   async getById(id: string): Promise<ITender | null> {
     return await EntTender.findById(id);
   }
+
+  async updateMinMaxFromOffer(tenderId: string, offer: number): Promise<void> {
+    await EntTender.findOneAndUpdate({ _id: tenderId }, { $min: { minOffer: offer }, $max: { maxOffer: offer } });
+  }
+
+  async updateMinMax(tenderId: string, min: number, max: number) {
+    await EntTender.findOneAndUpdate({ _id: tenderId }, { minOffer: min, maxOffer: max });
+  }
 }

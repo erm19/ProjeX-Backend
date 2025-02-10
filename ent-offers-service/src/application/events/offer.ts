@@ -3,12 +3,12 @@ import { IOffer } from "../../domain/entities";
 import { rabbitmqChannel } from "../../infrastructure/providers";
 
 export class OfferEvent {
-  static async onOfferCreated(offer: IOffer, meters: number) {
+  static async onOfferCreated(offer: IOffer) {
     await publishEvent(
       await rabbitmqChannel(),
       "offer_exchange",
       ExchangeTypes.topic,
-      { id: offer._id, tenderId: offer.tenderId, userId: offer.creator, offerMeters: meters },
+      { id: offer._id, tenderId: offer.tenderId, userId: offer.creator },
       "ent-offer.created"
     );
   }
