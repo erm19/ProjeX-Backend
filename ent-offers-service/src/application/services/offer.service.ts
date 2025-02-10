@@ -55,13 +55,22 @@ export class OfferService {
 
     if (!user) throw new NotFoundError("User Not Found");
 
-    return await this._listByRef.execute(RefTypes.Creator, (user._id as Types.ObjectId).toString(), limit, lastId);
+    const { nextId, data } = await this._listByRef.execute(
+      RefTypes.Creator,
+      (user._id as Types.ObjectId).toString(),
+      limit,
+      lastId
+    );
+
+    const gradedData = await this.gradeOffers(data);
+
+    return { nextId, data: gradedData };
   }
 
   async getTenderOffers(tenderId: string, limit: number, lastId?: string) {
     const { nextId, data } = await this._listByRef.execute(RefTypes.Tender, tenderId, limit, lastId);
 
-    const gradedData = await this.gradeTenderOffers(tenderId, data);
+    const gradedData = await this.gradeOffers(data, tenderId);
 
     return { nextId, data: gradedData };
   }
@@ -101,21 +110,48 @@ export class OfferService {
     return { min, max };
   }
 
-  private async gradeTenderOffers(tenderId: string, offers: IOffer[]) {
-    const tender = await this._tenderRepo.getById(tenderId);
-    if (!tender) throw new NotFoundError("Tender Not Found");
+  private async gradeOffers(offers: IOffer[], tenderId?: string) {
+    let maxMinDiff: number;
+    let minOffer: number;
+    let maxOffer: number;
+
+    if (tenderId) {
+      const data = await this.getOfferParamsFromTender(tenderId);
+      minOffer = data.minOffer;
+      maxOffer = data.maxOffer;
+      maxMinDiff = data.maxMinDiff;
+    }
+
+    return await Promise.all(
+      offers.map(async ({ intermediateGrade, ...offer }) => {
+        if (!tenderId) {
+          const data = await this.getOfferParamsFromTender(offer.tenderId.toString());
+          minOffer = data.minOffer;
+          maxOffer = data.maxOffer;
+          maxMinDiff = data.maxMinDiff;
+        }
+        const meters = offer.questionnaire[0].answer as number;
+        const meterGrade = ((meters - minOffer) / maxMinDiff) * 0.3;
+        return {
+          ...offer,
+          grade: intermediateGrade + meterGrade,
+        } as IOffer & { grade: number };
+      })
+    );
+  }
+
+  private async getOfferParamsFromTender(tenderId: string) {
+    const tenderFound = await this._tenderRepo.getById(tenderId);
+    if (!tenderFound) throw new NotFoundError("Tender Not Found");
+
+    const tender = tenderFound;
+
+    if (!tender.minOffer || !tender.maxOffer)
+      throw new InternalServerError("Tender should have minimum offer and maximum offer");
 
     const { minOffer, maxOffer } = tender;
-    if (!minOffer || !maxOffer) throw new InternalServerError("Tender should have minimum offer and maximum offer");
     const maxMinDiff = maxOffer - minOffer;
 
-    return offers.map(({ intermediateGrade, ...offer }) => {
-      const meters = offer.questionnaire[0].answer as number;
-      const meterGrade = ((meters - minOffer) / maxMinDiff) * 0.3;
-      return {
-        ...offer,
-        grade: intermediateGrade + meterGrade,
-      } as IOffer & { grade: number };
-    });
+    return { minOffer, maxOffer, maxMinDiff };
   }
 }
